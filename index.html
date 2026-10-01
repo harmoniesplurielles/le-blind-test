@@ -93,7 +93,7 @@ button:disabled {
   font-weight: bold;
 }
 
-.success {
+.message {
   background: white;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -125,11 +125,13 @@ button:disabled {
   Chargement de la manche…
 </div>
 
+
 <div id="game" hidden>
 
   <p class="subtitle" id="roundNumber"></p>
 
   <div class="round-name" id="roundName"></div>
+
 
   <div id="quiz">
 
@@ -148,9 +150,11 @@ button:disabled {
 
     </div>
 
+
     <p class="subtitle" id="instructions"></p>
 
     <div id="songs"></div>
+
 
     <button id="submitButton">
       Envoyer la manche
@@ -160,7 +164,23 @@ button:disabled {
 
   </div>
 
-  <div id="success" class="success" hidden>
+
+  <div id="alreadySubmitted" class="message" hidden>
+
+    <h2>Manche déjà envoyée ✓</h2>
+
+    <p>
+      Vos réponses ont bien été enregistrées.
+    </p>
+
+    <p>
+      Attendez les résultats !
+    </p>
+
+  </div>
+
+
+  <div id="success" class="message" hidden>
 
     <h2>Manche envoyée ✓</h2>
 
@@ -222,6 +242,9 @@ const loading =
 const game =
   document.getElementById("game");
 
+const quiz =
+  document.getElementById("quiz");
+
 const songsContainer =
   document.getElementById("songs");
 
@@ -234,14 +257,21 @@ const status =
 const teamNameInput =
   document.getElementById("teamName");
 
+const alreadySubmitted =
+  document.getElementById("alreadySubmitted");
+
+const success =
+  document.getElementById("success");
+
 
 let user = null;
 let currentRound = null;
 let roundName = "";
+let teamId = null;
 
 
 /* =========================
-   CONNEXION ANONYME
+   CONNEXION
    ========================= */
 
 try {
@@ -262,7 +292,7 @@ catch (error) {
 
 
 /* =========================
-   CHARGEMENT DE LA MANCHE
+   CONFIGURATION
    ========================= */
 
 if (user) {
@@ -273,6 +303,7 @@ if (user) {
       await get(
         ref(database, "settings")
       );
+
 
     if (!snapshot.exists()) {
 
@@ -293,7 +324,12 @@ if (user) {
         settings.rounds?.[currentRound]?.name
         || `Manche ${currentRound}`;
 
+
+      await checkTeamIdentity();
+
       initialiseGame();
+
+      await checkExistingSubmission();
 
     }
 
@@ -312,7 +348,106 @@ if (user) {
 
 
 /* =========================
-   INITIALISATION
+   IDENTITÉ DE L'ÉQUIPE
+   ========================= */
+
+async function checkTeamIdentity() {
+
+  teamId =
+    localStorage.getItem(
+      "blindTestTeamId"
+    );
+
+
+  if (!teamId) {
+    return;
+  }
+
+
+  try {
+
+    const snapshot =
+      await get(
+        ref(
+          database,
+          `teams/${teamId}`
+        )
+      );
+
+
+    /*
+      L'équipe existe toujours :
+      on conserve son identité.
+    */
+
+    if (snapshot.exists()) {
+
+      const team =
+        snapshot.val();
+
+      if (team.teamName) {
+
+        localStorage.setItem(
+          "blindTestTeamName",
+          team.teamName
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    /*
+      L'équipe n'existe plus dans Firebase.
+
+      Cela signifie notamment qu'une nouvelle
+      partie a été lancée par l'organisateur.
+    */
+
+    clearLocalTeam();
+
+  }
+
+  catch (error) {
+
+    /*
+      Si l'ancien identifiant appartient à une
+      ancienne session Firebase, sa lecture peut
+      être refusée.
+
+      On le considère alors comme périmé.
+    */
+
+    console.log(
+      "Ancienne identité locale supprimée."
+    );
+
+    clearLocalTeam();
+
+  }
+
+}
+
+
+function clearLocalTeam() {
+
+  localStorage.removeItem(
+    "blindTestTeamId"
+  );
+
+  localStorage.removeItem(
+    "blindTestTeamName"
+  );
+
+  teamId = null;
+
+}
+
+
+/* =========================
+   INTERFACE
    ========================= */
 
 function initialiseGame() {
@@ -320,10 +455,12 @@ function initialiseGame() {
   loading.hidden = true;
   game.hidden = false;
 
+
   document
     .getElementById("roundNumber")
     .textContent =
       `Manche ${currentRound} sur 3`;
+
 
   document
     .getElementById("roundName")
@@ -406,10 +543,53 @@ function initialiseGame() {
       "blindTestTeamName"
     );
 
+
   if (storedTeamName) {
 
     teamNameInput.value =
       storedTeamName;
+
+  }
+
+}
+
+
+/* =========================
+   DÉJÀ ENVOYÉ ?
+   ========================= */
+
+async function checkExistingSubmission() {
+
+  if (!teamId) {
+    return;
+  }
+
+
+  try {
+
+    const snapshot =
+      await get(
+        ref(
+          database,
+          `rounds/${currentRound}/submissions/${teamId}`
+        )
+      );
+
+
+    if (snapshot.exists()) {
+
+      quiz.hidden = true;
+      success.hidden = true;
+
+      alreadySubmitted.hidden = false;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
 
   }
 
@@ -450,64 +630,6 @@ submitButton.addEventListener(
     }
 
 
-    let teamId =
-      localStorage.getItem(
-        "blindTestTeamId"
-      );
-
-
-    if (!teamId) {
-
-      const newTeamRef =
-        push(
-          ref(database, "teams")
-        );
-
-      teamId =
-        newTeamRef.key;
-
-      localStorage.setItem(
-        "blindTestTeamId",
-        teamId
-      );
-
-    }
-
-
-    localStorage.setItem(
-      "blindTestTeamName",
-      name
-    );
-
-
-    const answers = {};
-
-
-    for (let i = 1; i <= 10; i++) {
-
-      answers[i] = {
-
-        title:
-          document
-            .getElementById(
-              `title-${i}`
-            )
-            .value
-            .trim(),
-
-        second:
-          document
-            .getElementById(
-              `second-${i}`
-            )
-            .value
-            .trim()
-
-      };
-
-    }
-
-
     submitButton.disabled = true;
 
     status.textContent =
@@ -516,16 +638,79 @@ submitButton.addEventListener(
 
     try {
 
-      await set(
-        ref(
-          database,
-          `teams/${teamId}`
-        ),
-        {
-          teamName: name,
-          ownerUid: user.uid
-        }
-      );
+      /*
+        Si aucune équipe n'existe encore
+        sur cet appareil, on la crée.
+      */
+
+      if (!teamId) {
+
+        const newTeamRef =
+          push(
+            ref(database, "teams")
+          );
+
+        teamId =
+          newTeamRef.key;
+
+
+        await set(
+          ref(
+            database,
+            `teams/${teamId}`
+          ),
+          {
+            teamName: name,
+            ownerUid: user.uid
+          }
+        );
+
+
+        localStorage.setItem(
+          "blindTestTeamId",
+          teamId
+        );
+
+        localStorage.setItem(
+          "blindTestTeamName",
+          name
+        );
+
+      }
+
+
+      /*
+        La soumission ne peut être créée
+        qu'une seule fois grâce aux règles
+        Firebase.
+      */
+
+      const answers = {};
+
+
+      for (let i = 1; i <= 10; i++) {
+
+        answers[i] = {
+
+          title:
+            document
+              .getElementById(
+                `title-${i}`
+              )
+              .value
+              .trim(),
+
+          second:
+            document
+              .getElementById(
+                `second-${i}`
+              )
+              .value
+              .trim()
+
+        };
+
+      }
 
 
       await set(
@@ -534,28 +719,68 @@ submitButton.addEventListener(
           `rounds/${currentRound}/submissions/${teamId}`
         ),
         {
-          teamName: name,
-          ownerUid: user.uid,
-          answers: answers,
-          submittedAt: Date.now()
+          teamName:
+            localStorage.getItem(
+              "blindTestTeamName"
+            ) || name,
+
+          ownerUid:
+            user.uid,
+
+          answers:
+            answers,
+
+          submittedAt:
+            Date.now()
         }
       );
 
 
-      document
-        .getElementById("quiz")
-        .hidden = true;
-
-
-      document
-        .getElementById("success")
-        .hidden = false;
+      quiz.hidden = true;
+      alreadySubmitted.hidden = true;
+      success.hidden = false;
 
     }
 
     catch (error) {
 
       console.error(error);
+
+
+      /*
+        Si une soumission existe déjà,
+        Firebase refuse son remplacement.
+      */
+
+      try {
+
+        const existing =
+          await get(
+            ref(
+              database,
+              `rounds/${currentRound}/submissions/${teamId}`
+            )
+          );
+
+
+        if (existing.exists()) {
+
+          quiz.hidden = true;
+          success.hidden = true;
+          alreadySubmitted.hidden = false;
+
+          return;
+
+        }
+
+      }
+
+      catch (checkError) {
+
+        console.error(checkError);
+
+      }
+
 
       status.textContent =
         "L'envoi a échoué. Réessayez.";
