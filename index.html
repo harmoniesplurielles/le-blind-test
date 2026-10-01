@@ -7,7 +7,9 @@
 <title>Le Blind Test</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -19,28 +21,27 @@ body {
 main {
   max-width: 650px;
   margin: auto;
-  padding: 24px 16px 60px;
+  padding: 25px 16px 60px;
 }
 
-h1 { margin-bottom: 5px; }
-
-.subtitle {
-  color: #666;
+h1, h2, h3 {
   margin-top: 0;
 }
 
-.round-name {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 4px 0 20px;
+.subtitle {
+  color: #666;
 }
 
 .card {
   background: white;
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+}
+
+.round-header {
+  margin-bottom: 20px;
 }
 
 .song-number {
@@ -48,17 +49,19 @@ h1 { margin-bottom: 5px; }
   margin-bottom: 12px;
 }
 
-.fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.field {
+  margin-bottom: 12px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
 }
 
 label {
   display: block;
   font-size: 14px;
-  margin-bottom: 5px;
   color: #555;
+  margin-bottom: 5px;
 }
 
 input {
@@ -67,17 +70,20 @@ input {
   font-size: 16px;
   border: 1px solid #bbb;
   border-radius: 8px;
+  background: white;
 }
 
 button {
   width: 100%;
-  padding: 15px;
-  margin-top: 12px;
   border: 0;
   border-radius: 9px;
+  padding: 15px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.primary {
   background: #222;
   color: white;
 }
@@ -87,30 +93,19 @@ button:disabled {
   cursor: not-allowed;
 }
 
-#status {
-  margin-top: 15px;
-  text-align: center;
+.status {
+  margin-top: 12px;
   font-weight: bold;
 }
 
-.message {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 25px;
+.success {
   text-align: center;
+  padding: 35px 20px;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px 10px;
-  color: #666;
-}
-
-@media (max-width: 520px) {
-  .fields {
-    grid-template-columns: 1fr;
-  }
+.success-mark {
+  font-size: 42px;
+  margin-bottom: 15px;
 }
 </style>
 </head>
@@ -119,21 +114,20 @@ button:disabled {
 
 <main>
 
-<h1>Le Blind Test</h1>
+  <div class="round-header">
 
-<div id="loading" class="loading">
-  Chargement de la manche…
-</div>
+    <h1>
+      Le Blind Test
+    </h1>
+
+    <div id="roundInfo">
+      Chargement…
+    </div>
+
+  </div>
 
 
-<div id="game" hidden>
-
-  <p class="subtitle" id="roundNumber"></p>
-
-  <div class="round-name" id="roundName"></div>
-
-
-  <div id="quiz">
+  <section id="quiz" hidden>
 
     <div class="card">
 
@@ -144,32 +138,46 @@ button:disabled {
       <input
         id="teamName"
         type="text"
-        placeholder="Ex. Les Divas"
+        placeholder="Votre équipe"
         autocomplete="off"
       >
 
     </div>
 
 
-    <p class="subtitle" id="instructions"></p>
-
     <div id="songs"></div>
 
 
-    <button id="submitButton">
+    <button
+      id="submitButton"
+      class="primary"
+    >
       Envoyer la manche
     </button>
 
-    <div id="status"></div>
+    <div
+      id="submitStatus"
+      class="status"
+    ></div>
 
-  </div>
+  </section>
 
 
-  <div id="alreadySubmitted" class="message" hidden>
+  <section
+    id="success"
+    class="card success"
+    hidden
+  >
 
-    <h2>Manche déjà envoyée ✓</h2>
+    <div class="success-mark">
+      ✓
+    </div>
 
-    <p>
+    <h2 id="successTitle">
+      Manche envoyée
+    </h2>
+
+    <p id="successText">
       Vos réponses ont bien été enregistrées.
     </p>
 
@@ -177,32 +185,22 @@ button:disabled {
       Attendez les résultats !
     </p>
 
-  </div>
-
-
-  <div id="success" class="message" hidden>
-
-    <h2>Manche envoyée ✓</h2>
-
-    <p>
-      Vos réponses sont enregistrées et verrouillées.
-    </p>
-
-    <p>
-      Attendez les résultats !
-    </p>
-
-  </div>
-
-</div>
+  </section>
 
 </main>
 
 
 <script type="module">
 
-import { initializeApp }
+/* =========================
+   FIREBASE
+   ========================= */
+
+import {
+  initializeApp
+}
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
 
 import {
   getAuth,
@@ -210,128 +208,138 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
+
 import {
   getDatabase,
   ref,
   get,
-  push,
-  set
+  set,
+  push
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
-  authDomain: "le-blind-test.firebaseapp.com",
-  databaseURL: "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "le-blind-test",
-  storageBucket: "le-blind-test.firebasestorage.app",
-  messagingSenderId: "551170415765",
-  appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
+
+  apiKey:
+    "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
+
+  authDomain:
+    "le-blind-test.firebaseapp.com",
+
+  databaseURL:
+    "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
+
+  projectId:
+    "le-blind-test",
+
+  storageBucket:
+    "le-blind-test.firebasestorage.app",
+
+  messagingSenderId:
+    "551170415765",
+
+  appId:
+    "1:551170415765:web:3cc00ae2c266d36e628f9c"
+
 };
 
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+const app =
+  initializeApp(firebaseConfig);
 
 
-const loading =
-  document.getElementById("loading");
+const auth =
+  getAuth(app);
 
-const game =
-  document.getElementById("game");
+
+const database =
+  getDatabase(app);
+
+
+/* =========================
+   ETAT
+   ========================= */
+
+let currentRound = 1;
+
+let teamId =
+  localStorage.getItem(
+    "blindTestTeamId"
+  );
+
+let teamName =
+  localStorage.getItem(
+    "blindTestTeamName"
+  );
+
+
+/* =========================
+   DOM
+   ========================= */
+
+const roundInfo =
+  document.getElementById(
+    "roundInfo"
+  );
 
 const quiz =
-  document.getElementById("quiz");
+  document.getElementById(
+    "quiz"
+  );
 
 const songsContainer =
-  document.getElementById("songs");
-
-const submitButton =
-  document.getElementById("submitButton");
-
-const status =
-  document.getElementById("status");
+  document.getElementById(
+    "songs"
+  );
 
 const teamNameInput =
-  document.getElementById("teamName");
+  document.getElementById(
+    "teamName"
+  );
 
-const alreadySubmitted =
-  document.getElementById("alreadySubmitted");
+const submitButton =
+  document.getElementById(
+    "submitButton"
+  );
+
+const submitStatus =
+  document.getElementById(
+    "submitStatus"
+  );
 
 const success =
-  document.getElementById("success");
+  document.getElementById(
+    "success"
+  );
 
+const successTitle =
+  document.getElementById(
+    "successTitle"
+  );
 
-let user = null;
-let currentRound = null;
-let roundName = "";
-let teamId = null;
-
-
-/* =========================
-   CONNEXION
-   ========================= */
-
-try {
-
-  const result =
-    await signInAnonymously(auth);
-
-  user = result.user;
-
-}
-catch (error) {
-
-  console.error(error);
-
-  loading.textContent =
-    "Impossible de se connecter au jeu.";
-}
+const successText =
+  document.getElementById(
+    "successText"
+  );
 
 
 /* =========================
-   CONFIGURATION
+   DEMARRAGE
    ========================= */
 
-if (user) {
+start();
+
+
+async function start() {
 
   try {
 
-    const snapshot =
-      await get(
-        ref(database, "settings")
-      );
+    await signInAnonymously(auth);
 
+    await checkTeamIdentity();
 
-    if (!snapshot.exists()) {
-
-      loading.textContent =
-        "Aucune manche n'est ouverte pour le moment.";
-
-    }
-
-    else {
-
-      const settings =
-        snapshot.val();
-
-      currentRound =
-        Number(settings.currentRound);
-
-      roundName =
-        settings.rounds?.[currentRound]?.name
-        || `Manche ${currentRound}`;
-
-
-      await checkTeamIdentity();
-
-      initialiseGame();
-
-      await checkExistingSubmission();
-
-    }
+    await initialiseGame();
 
   }
 
@@ -339,8 +347,8 @@ if (user) {
 
     console.error(error);
 
-    loading.textContent =
-      "Impossible de charger la manche.";
+    roundInfo.textContent =
+      "Impossible de charger le blind test.";
 
   }
 
@@ -348,16 +356,10 @@ if (user) {
 
 
 /* =========================
-   IDENTITÉ DE L'ÉQUIPE
+   IDENTITE EQUIPE
    ========================= */
 
 async function checkTeamIdentity() {
-
-  teamId =
-    localStorage.getItem(
-      "blindTestTeamId"
-    );
-
 
   if (!teamId) {
     return;
@@ -375,53 +377,42 @@ async function checkTeamIdentity() {
       );
 
 
-    /*
-      L'équipe existe toujours :
-      on conserve son identité.
-    */
+    if (!snapshot.exists()) {
 
-    if (snapshot.exists()) {
-
-      const team =
-        snapshot.val();
-
-      if (team.teamName) {
-
-        localStorage.setItem(
-          "blindTestTeamName",
-          team.teamName
-        );
-
-      }
-
+      clearLocalTeam();
       return;
 
     }
 
 
-    /*
-      L'équipe n'existe plus dans Firebase.
+    const team =
+      snapshot.val();
 
-      Cela signifie notamment qu'une nouvelle
-      partie a été lancée par l'organisateur.
-    */
 
-    clearLocalTeam();
+    teamName =
+      team.teamName || "";
+
+
+    localStorage.setItem(
+      "blindTestTeamName",
+      teamName
+    );
 
   }
 
   catch (error) {
 
     /*
-      Si l'ancien identifiant appartient à une
-      ancienne session Firebase, sa lecture peut
-      être refusée.
+      Une ancienne identité locale peut ne
+      plus avoir accès à l'équipe après une
+      réinitialisation.
 
-      On le considère alors comme périmé.
+      Dans ce cas, le navigateur redevient
+      simplement une nouvelle équipe.
     */
 
-    console.log(
-      "Ancienne identité locale supprimée."
+    console.warn(
+      "Ancienne équipe supprimée ou inaccessible."
     );
 
     clearLocalTeam();
@@ -441,113 +432,168 @@ function clearLocalTeam() {
     "blindTestTeamName"
   );
 
+
   teamId = null;
+  teamName = null;
 
 }
 
 
 /* =========================
-   INTERFACE
+   CHARGER LA PARTIE
    ========================= */
 
-function initialiseGame() {
+async function initialiseGame() {
 
-  loading.hidden = true;
-  game.hidden = false;
+  /*
+    IMPORTANT :
+    la page équipe ne lit maintenant QUE
+    publicSettings.
+
+    Les réponses correctes restent dans
+    settings et ne sont accessibles qu'à
+    l'administrateur.
+  */
+
+  const snapshot =
+    await get(
+      ref(
+        database,
+        "publicSettings"
+      )
+    );
 
 
-  document
-    .getElementById("roundNumber")
-    .textContent =
-      `Manche ${currentRound} sur 3`;
+  if (!snapshot.exists()) {
+
+    roundInfo.textContent =
+      "La soirée n'est pas encore configurée.";
+
+    return;
+
+  }
 
 
-  document
-    .getElementById("roundName")
-    .textContent =
-      roundName;
+  const publicSettings =
+    snapshot.val();
 
 
-  const secondField =
+  currentRound =
+    Number(
+      publicSettings.currentRound
+      || 1
+    );
+
+
+  const roundName =
+    publicSettings
+      .rounds
+      ?.[currentRound]
+      ?.name
+    || "";
+
+
+  roundInfo.innerHTML = `
+
+    <strong>
+      Manche ${currentRound} sur 3
+    </strong>
+
+    ${roundName
+      ? ` — ${escapeHTML(roundName)}`
+      : ""
+    }
+  `;
+
+
+  renderSongs();
+
+
+  if (teamName) {
+
+    teamNameInput.value =
+      teamName;
+
+  }
+
+
+  await checkExistingSubmission();
+
+}
+
+
+/* =========================
+   CREER LES 10 CHANSONS
+   ========================= */
+
+function renderSongs() {
+
+  songsContainer.innerHTML = "";
+
+
+  const secondLabel =
     currentRound === 3
       ? "Comédie musicale"
       : "Artiste(s)";
 
 
-  document
-    .getElementById("instructions")
-    .textContent =
-      currentRound === 3
-        ? "Pour chaque chanson, indiquez le titre et la comédie musicale dont elle est tirée."
-        : "Pour chaque chanson, indiquez le titre et le ou les artistes.";
-
-
-  songsContainer.innerHTML = "";
-
-
-  for (let i = 1; i <= 10; i++) {
+  for (
+    let song = 1;
+    song <= 10;
+    song++
+  ) {
 
     const card =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    card.className = "card";
+
+    card.className =
+      "card";
+
 
     card.innerHTML = `
 
       <div class="song-number">
-        Chanson ${i}
+        Chanson ${song}
       </div>
 
-      <div class="fields">
 
-        <div>
+      <div class="field">
 
-          <label for="title-${i}">
-            Titre
-          </label>
+        <label>
+          Titre
+        </label>
 
-          <input
-            id="title-${i}"
-            type="text"
-            autocomplete="off"
-            placeholder="Titre de la chanson"
-          >
+        <input
+          id="title-${song}"
+          type="text"
+          autocomplete="off"
+        >
 
-        </div>
+      </div>
 
-        <div>
 
-          <label for="second-${i}">
-            ${secondField}
-          </label>
+      <div class="field">
 
-          <input
-            id="second-${i}"
-            type="text"
-            autocomplete="off"
-            placeholder="${secondField}"
-          >
+        <label>
+          ${secondLabel}
+        </label>
 
-        </div>
+        <input
+          id="second-${song}"
+          type="text"
+          autocomplete="off"
+        >
 
       </div>
     `;
 
-    songsContainer.appendChild(card);
 
-  }
-
-
-  const storedTeamName =
-    localStorage.getItem(
-      "blindTestTeamName"
+    songsContainer.appendChild(
+      card
     );
-
-
-  if (storedTeamName) {
-
-    teamNameInput.value =
-      storedTeamName;
 
   }
 
@@ -555,13 +601,18 @@ function initialiseGame() {
 
 
 /* =========================
-   DÉJÀ ENVOYÉ ?
+   VERIFIER SI DEJA ENVOYE
    ========================= */
 
 async function checkExistingSubmission() {
 
   if (!teamId) {
+
+    quiz.hidden = false;
+    success.hidden = true;
+
     return;
+
   }
 
 
@@ -578,10 +629,14 @@ async function checkExistingSubmission() {
 
     if (snapshot.exists()) {
 
-      quiz.hidden = true;
-      success.hidden = true;
+      showAlreadySubmitted();
 
-      alreadySubmitted.hidden = false;
+    }
+
+    else {
+
+      quiz.hidden = false;
+      success.hidden = true;
 
     }
 
@@ -590,6 +645,9 @@ async function checkExistingSubmission() {
   catch (error) {
 
     console.error(error);
+
+    quiz.hidden = false;
+    success.hidden = true;
 
   }
 
@@ -605,12 +663,14 @@ submitButton.addEventListener(
   async () => {
 
     const name =
-      teamNameInput.value.trim();
+      teamNameInput
+        .value
+        .trim();
 
 
     if (!name) {
 
-      status.textContent =
+      submitStatus.textContent =
         "Indiquez le nom de votre équipe.";
 
       teamNameInput.focus();
@@ -620,48 +680,48 @@ submitButton.addEventListener(
     }
 
 
-    if (!user || !currentRound) {
-
-      status.textContent =
-        "Connexion au jeu impossible.";
-
-      return;
-
-    }
-
-
     submitButton.disabled = true;
 
-    status.textContent =
-      "Envoi en cours…";
+    submitStatus.textContent =
+      "Envoi…";
 
 
     try {
 
       /*
-        Si aucune équipe n'existe encore
-        sur cet appareil, on la crée.
+        Première manche de cette équipe :
+        on crée son identifiant indépendant.
       */
 
       if (!teamId) {
 
         const newTeamRef =
           push(
-            ref(database, "teams")
+            ref(
+              database,
+              "teams"
+            )
           );
+
 
         teamId =
           newTeamRef.key;
 
 
+        teamName =
+          name;
+
+
         await set(
-          ref(
-            database,
-            `teams/${teamId}`
-          ),
+          newTeamRef,
           {
-            teamName: name,
-            ownerUid: user.uid
+
+            teamName:
+              name,
+
+            ownerUid:
+              auth.currentUser.uid
+
           }
         );
 
@@ -670,6 +730,7 @@ submitButton.addEventListener(
           "blindTestTeamId",
           teamId
         );
+
 
         localStorage.setItem(
           "blindTestTeamName",
@@ -680,22 +741,24 @@ submitButton.addEventListener(
 
 
       /*
-        La soumission ne peut être créée
-        qu'une seule fois grâce aux règles
-        Firebase.
+        Construire les réponses.
       */
 
       const answers = {};
 
 
-      for (let i = 1; i <= 10; i++) {
+      for (
+        let song = 1;
+        song <= 10;
+        song++
+      ) {
 
-        answers[i] = {
+        answers[song] = {
 
           title:
             document
               .getElementById(
-                `title-${i}`
+                `title-${song}`
               )
               .value
               .trim(),
@@ -703,7 +766,7 @@ submitButton.addEventListener(
           second:
             document
               .getElementById(
-                `second-${i}`
+                `second-${song}`
               )
               .value
               .trim()
@@ -713,32 +776,39 @@ submitButton.addEventListener(
       }
 
 
+      /*
+        Envoi unique de la manche.
+
+        Les règles Firebase empêchent
+        l'équipe d'écraser ensuite cette
+        soumission.
+      */
+
       await set(
         ref(
           database,
           `rounds/${currentRound}/submissions/${teamId}`
         ),
         {
+
           teamName:
-            localStorage.getItem(
-              "blindTestTeamName"
-            ) || name,
+            teamName || name,
 
           ownerUid:
-            user.uid,
+            auth.currentUser.uid,
 
-          answers:
-            answers,
+          answers,
 
           submittedAt:
             Date.now()
+
         }
       );
 
 
-      quiz.hidden = true;
-      alreadySubmitted.hidden = true;
-      success.hidden = false;
+      submitStatus.textContent = "";
+
+      showSubmitted();
 
     }
 
@@ -748,42 +818,47 @@ submitButton.addEventListener(
 
 
       /*
-        Si une soumission existe déjà,
-        Firebase refuse son remplacement.
+        Si l'envoi existe déjà, on affiche
+        simplement l'état verrouillé.
       */
 
-      try {
+      if (teamId) {
 
-        const existing =
-          await get(
-            ref(
-              database,
-              `rounds/${currentRound}/submissions/${teamId}`
-            )
+        try {
+
+          const snapshot =
+            await get(
+              ref(
+                database,
+                `rounds/${currentRound}/submissions/${teamId}`
+              )
+            );
+
+
+          if (snapshot.exists()) {
+
+            showAlreadySubmitted();
+
+            return;
+
+          }
+
+        }
+
+        catch (checkError) {
+
+          console.error(
+            checkError
           );
-
-
-        if (existing.exists()) {
-
-          quiz.hidden = true;
-          success.hidden = true;
-          alreadySubmitted.hidden = false;
-
-          return;
 
         }
 
       }
 
-      catch (checkError) {
 
-        console.error(checkError);
-
-      }
-
-
-      status.textContent =
+      submitStatus.textContent =
         "L'envoi a échoué. Réessayez.";
+
 
       submitButton.disabled = false;
 
@@ -791,6 +866,78 @@ submitButton.addEventListener(
 
   }
 );
+
+
+/* =========================
+   ECRANS DE SUCCES
+   ========================= */
+
+function showSubmitted() {
+
+  quiz.hidden = true;
+  success.hidden = false;
+
+
+  successTitle.textContent =
+    "Manche envoyée ✓";
+
+
+  successText.textContent =
+    "Vos réponses ont bien été enregistrées et sont maintenant verrouillées.";
+
+}
+
+
+function showAlreadySubmitted() {
+
+  quiz.hidden = true;
+  success.hidden = false;
+
+
+  successTitle.textContent =
+    "Manche déjà envoyée ✓";
+
+
+  successText.textContent =
+    "Vos réponses ont bien été enregistrées.";
+
+}
+
+
+/* =========================
+   SECURITE AFFICHAGE
+   ========================= */
+
+function escapeHTML(value) {
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
 
 </script>
 
