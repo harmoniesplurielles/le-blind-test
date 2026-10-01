@@ -101,6 +101,12 @@ button:disabled {
   text-align: center;
 }
 
+.loading {
+  text-align: center;
+  padding: 40px 10px;
+  color: #666;
+}
+
 @media (max-width: 520px) {
   .fields {
     grid-template-columns: 1fr;
@@ -115,47 +121,59 @@ button:disabled {
 
 <h1>Le Blind Test</h1>
 
-<p class="subtitle" id="roundNumber">
-  Manche 1 sur 3
-</p>
-
-<div class="round-name" id="roundName">
-  Manche 1
+<div id="loading" class="loading">
+  Chargement de la manche…
 </div>
 
-<div id="quiz">
+<div id="game" hidden>
 
-  <div class="card">
-    <label for="teamName">
-      Nom de l'équipe
-    </label>
+  <p class="subtitle" id="roundNumber"></p>
 
-    <input
-      id="teamName"
-      type="text"
-      placeholder="Ex. Les Divas"
-      autocomplete="off"
-    >
+  <div class="round-name" id="roundName"></div>
+
+  <div id="quiz">
+
+    <div class="card">
+
+      <label for="teamName">
+        Nom de l'équipe
+      </label>
+
+      <input
+        id="teamName"
+        type="text"
+        placeholder="Ex. Les Divas"
+        autocomplete="off"
+      >
+
+    </div>
+
+    <p class="subtitle" id="instructions"></p>
+
+    <div id="songs"></div>
+
+    <button id="submitButton">
+      Envoyer la manche
+    </button>
+
+    <div id="status"></div>
+
   </div>
 
-  <p class="subtitle" id="instructions">
-    Pour chaque chanson, indiquez le titre et le ou les artistes.
-  </p>
+  <div id="success" class="success" hidden>
 
-  <div id="songs"></div>
+    <h2>Manche envoyée ✓</h2>
 
-  <button id="submitButton">
-    Envoyer la manche
-  </button>
+    <p>
+      Vos réponses sont enregistrées et verrouillées.
+    </p>
 
-  <div id="status"></div>
+    <p>
+      Attendez les résultats !
+    </p>
 
-</div>
+  </div>
 
-<div id="success" class="success" hidden>
-  <h2>Manche envoyée ✓</h2>
-  <p>Vos réponses sont enregistrées et verrouillées.</p>
-  <p>Attendez les résultats !</p>
 </div>
 
 </main>
@@ -175,6 +193,7 @@ from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import {
   getDatabase,
   ref,
+  get,
   push,
   set
 }
@@ -191,26 +210,17 @@ const firebaseConfig = {
   appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
 };
 
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
 
-/* =========================
-   CONFIGURATION TEMPORAIRE
-   =========================
+const loading =
+  document.getElementById("loading");
 
-   Plus tard l'admin pilotera ceci
-   automatiquement.
-*/
-
-const currentRound = 1;
-const temporaryRoundName = "Manche test";
-
-
-/* =========================
-   INTERFACE
-   ========================= */
+const game =
+  document.getElementById("game");
 
 const songsContainer =
   document.getElementById("songs");
@@ -224,87 +234,15 @@ const status =
 const teamNameInput =
   document.getElementById("teamName");
 
-const secondField =
-  currentRound === 3
-    ? "Comédie musicale"
-    : "Artiste(s)";
-
-
-document.getElementById("roundNumber").textContent =
-  `Manche ${currentRound} sur 3`;
-
-document.getElementById("roundName").textContent =
-  temporaryRoundName;
-
-
-if (currentRound === 3) {
-
-  document.getElementById("instructions").textContent =
-    "Pour chaque chanson, indiquez le titre et la comédie musicale dont elle est tirée.";
-}
-
-
-/* =========================
-   10 CHANSONS
-   ========================= */
-
-for (let i = 1; i <= 10; i++) {
-
-  const card =
-    document.createElement("div");
-
-  card.className = "card";
-
-  card.innerHTML = `
-
-    <div class="song-number">
-      Chanson ${i}
-    </div>
-
-    <div class="fields">
-
-      <div>
-
-        <label for="title-${i}">
-          Titre
-        </label>
-
-        <input
-          id="title-${i}"
-          type="text"
-          autocomplete="off"
-          placeholder="Titre de la chanson"
-        >
-
-      </div>
-
-      <div>
-
-        <label for="second-${i}">
-          ${secondField}
-        </label>
-
-        <input
-          id="second-${i}"
-          type="text"
-          autocomplete="off"
-          placeholder="${secondField}"
-        >
-
-      </div>
-
-    </div>
-  `;
-
-  songsContainer.appendChild(card);
-}
-
-
-/* =========================
-   AUTHENTIFICATION
-   ========================= */
 
 let user = null;
+let currentRound = null;
+let roundName = "";
+
+
+/* =========================
+   CONNEXION ANONYME
+   ========================= */
 
 try {
 
@@ -318,35 +256,163 @@ catch (error) {
 
   console.error(error);
 
-  status.textContent =
+  loading.textContent =
     "Impossible de se connecter au jeu.";
-
-  submitButton.disabled = true;
 }
 
 
 /* =========================
-   IDENTITÉ DE L'ÉQUIPE
+   CHARGEMENT DE LA MANCHE
    ========================= */
 
-/*
-   teamId est conservé dans le navigateur.
+if (user) {
 
-   Firebase Auth identifie le téléphone.
-   teamId identifie l'équipe dans le jeu.
-*/
+  try {
 
-let teamId =
-  localStorage.getItem("blindTestTeamId");
+    const snapshot =
+      await get(
+        ref(database, "settings")
+      );
 
-let storedTeamName =
-  localStorage.getItem("blindTestTeamName");
+    if (!snapshot.exists()) {
+
+      loading.textContent =
+        "Aucune manche n'est ouverte pour le moment.";
+
+    }
+
+    else {
+
+      const settings =
+        snapshot.val();
+
+      currentRound =
+        Number(settings.currentRound);
+
+      roundName =
+        settings.rounds?.[currentRound]?.name
+        || `Manche ${currentRound}`;
+
+      initialiseGame();
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    loading.textContent =
+      "Impossible de charger la manche.";
+
+  }
+
+}
 
 
-if (storedTeamName) {
+/* =========================
+   INITIALISATION
+   ========================= */
 
-  teamNameInput.value =
-    storedTeamName;
+function initialiseGame() {
+
+  loading.hidden = true;
+  game.hidden = false;
+
+  document
+    .getElementById("roundNumber")
+    .textContent =
+      `Manche ${currentRound} sur 3`;
+
+  document
+    .getElementById("roundName")
+    .textContent =
+      roundName;
+
+
+  const secondField =
+    currentRound === 3
+      ? "Comédie musicale"
+      : "Artiste(s)";
+
+
+  document
+    .getElementById("instructions")
+    .textContent =
+      currentRound === 3
+        ? "Pour chaque chanson, indiquez le titre et la comédie musicale dont elle est tirée."
+        : "Pour chaque chanson, indiquez le titre et le ou les artistes.";
+
+
+  songsContainer.innerHTML = "";
+
+
+  for (let i = 1; i <= 10; i++) {
+
+    const card =
+      document.createElement("div");
+
+    card.className = "card";
+
+    card.innerHTML = `
+
+      <div class="song-number">
+        Chanson ${i}
+      </div>
+
+      <div class="fields">
+
+        <div>
+
+          <label for="title-${i}">
+            Titre
+          </label>
+
+          <input
+            id="title-${i}"
+            type="text"
+            autocomplete="off"
+            placeholder="Titre de la chanson"
+          >
+
+        </div>
+
+        <div>
+
+          <label for="second-${i}">
+            ${secondField}
+          </label>
+
+          <input
+            id="second-${i}"
+            type="text"
+            autocomplete="off"
+            placeholder="${secondField}"
+          >
+
+        </div>
+
+      </div>
+    `;
+
+    songsContainer.appendChild(card);
+
+  }
+
+
+  const storedTeamName =
+    localStorage.getItem(
+      "blindTestTeamName"
+    );
+
+  if (storedTeamName) {
+
+    teamNameInput.value =
+      storedTeamName;
+
+  }
+
 }
 
 
@@ -370,27 +436,32 @@ submitButton.addEventListener(
       teamNameInput.focus();
 
       return;
+
     }
 
 
-    if (!user) {
+    if (!user || !currentRound) {
 
       status.textContent =
         "Connexion au jeu impossible.";
 
       return;
+
     }
 
 
-    /*
-       Première manche sur cet appareil :
-       création d'un identifiant d'équipe.
-    */
+    let teamId =
+      localStorage.getItem(
+        "blindTestTeamId"
+      );
+
 
     if (!teamId) {
 
       const newTeamRef =
-        push(ref(database, "teams"));
+        push(
+          ref(database, "teams")
+        );
 
       teamId =
         newTeamRef.key;
@@ -399,6 +470,7 @@ submitButton.addEventListener(
         "blindTestTeamId",
         teamId
       );
+
     }
 
 
@@ -417,17 +489,22 @@ submitButton.addEventListener(
 
         title:
           document
-            .getElementById(`title-${i}`)
+            .getElementById(
+              `title-${i}`
+            )
             .value
             .trim(),
 
         second:
           document
-            .getElementById(`second-${i}`)
+            .getElementById(
+              `second-${i}`
+            )
             .value
             .trim()
 
       };
+
     }
 
 
@@ -438,11 +515,6 @@ submitButton.addEventListener(
 
 
     try {
-
-      /*
-        L'équipe possède une identité unique
-        indépendante de son UID Firebase.
-      */
 
       await set(
         ref(
@@ -455,11 +527,6 @@ submitButton.addEventListener(
         }
       );
 
-
-      /*
-        Sa réponse à cette manche est stockée
-        séparément.
-      */
 
       await set(
         ref(
@@ -494,6 +561,7 @@ submitButton.addEventListener(
         "L'envoi a échoué. Réessayez.";
 
       submitButton.disabled = false;
+
     }
 
   }
