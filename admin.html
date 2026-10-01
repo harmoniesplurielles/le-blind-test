@@ -24,9 +24,7 @@ main {
 
 h1, h2, h3 { margin-top: 0; }
 
-.subtitle {
-  color: #666;
-}
+.subtitle { color: #666; }
 
 .card {
   background: white;
@@ -86,9 +84,7 @@ label {
   margin-bottom: 12px;
 }
 
-.full {
-  width: 100%;
-}
+.full { width: 100%; }
 
 .topline {
   display: flex;
@@ -103,9 +99,7 @@ label {
   margin: 25px 0;
 }
 
-.tab {
-  background: #ddd;
-}
+.tab { background: #ddd; }
 
 .tab.active {
   background: #222;
@@ -205,10 +199,6 @@ label {
   margin-bottom: 5px;
 }
 
-.answer-text {
-  display: block;
-}
-
 .navigation {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -246,10 +236,7 @@ label {
   border-bottom: none;
 }
 
-.rank {
-  font-weight: bold;
-}
-
+.rank,
 .score {
   font-weight: bold;
 }
@@ -270,7 +257,6 @@ label {
 }
 
 @media (max-width: 700px) {
-
   .song-row,
   .round-title,
   .toolbar,
@@ -302,79 +288,40 @@ label {
 
 <main>
 
-<!-- =========================
-     CONNEXION
-     ========================= -->
-
 <section id="login">
 
   <div class="card">
 
     <h1>Administration</h1>
+    <p class="subtitle">Le Blind Test</p>
 
-    <p class="subtitle">
-      Le Blind Test
-    </p>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" autocomplete="username">
 
-    <label for="email">
-      E-mail
-    </label>
+    <label for="password">Mot de passe</label>
+    <input id="password" type="password" autocomplete="current-password">
 
-    <input
-      id="email"
-      type="email"
-      autocomplete="username"
-    >
-
-    <label for="password">
-      Mot de passe
-    </label>
-
-    <input
-      id="password"
-      type="password"
-      autocomplete="current-password"
-    >
-
-    <button
-      id="loginButton"
-      class="primary full"
-    >
+    <button id="loginButton" class="primary full">
       Se connecter
     </button>
 
-    <div
-      id="loginStatus"
-      class="status"
-    ></div>
+    <div id="loginStatus" class="status"></div>
 
   </div>
 
 </section>
 
 
-<!-- =========================
-     ADMIN
-     ========================= -->
-
 <section id="admin" hidden>
 
   <div class="topline">
 
     <div>
-
       <h1>Le Blind Test</h1>
-
-      <p class="subtitle">
-        Administration
-      </p>
-
+      <p class="subtitle">Administration</p>
     </div>
 
-    <button
-      id="logoutButton"
-      class="secondary"
-    >
+    <button id="logoutButton" class="secondary">
       Déconnexion
     </button>
 
@@ -383,26 +330,16 @@ label {
 
   <div class="tabs">
 
-    <button
-      id="prepareTab"
-      class="tab active"
-    >
+    <button id="prepareTab" class="tab active">
       Préparer la soirée
     </button>
 
-    <button
-      id="correctTab"
-      class="tab"
-    >
+    <button id="correctTab" class="tab">
       Correction & classements
     </button>
 
   </div>
 
-
-  <!-- =========================
-       PREPARATION
-       ========================= -->
 
   <section id="prepareSection">
 
@@ -417,37 +354,20 @@ label {
           </label>
 
           <select id="currentRound">
-
-            <option value="1">
-              Manche 1
-            </option>
-
-            <option value="2">
-              Manche 2
-            </option>
-
-            <option value="3">
-              Manche 3
-            </option>
-
+            <option value="1">Manche 1</option>
+            <option value="2">Manche 2</option>
+            <option value="3">Manche 3</option>
           </select>
 
         </div>
 
-
-        <button
-          id="saveButton"
-          class="primary"
-        >
+        <button id="saveButton" class="primary">
           Enregistrer
         </button>
 
       </div>
 
-      <div
-        id="saveStatus"
-        class="status"
-      ></div>
+      <div id="saveStatus" class="status"></div>
 
     </div>
 
@@ -455,32 +375,20 @@ label {
     <div id="rounds"></div>
 
 
-    <!-- ENREGISTRER EN BAS -->
-
     <div class="card">
 
-      <button
-        id="saveButtonBottom"
-        class="primary full"
-      >
+      <button id="saveButtonBottom" class="primary full">
         Enregistrer
       </button>
 
-      <div
-        id="saveStatusBottom"
-        class="status"
-      ></div>
+      <div id="saveStatusBottom" class="status"></div>
 
     </div>
 
 
-    <!-- REINITIALISATION -->
-
     <div class="card reset-card">
 
-      <h2>
-        Nouvelle partie
-      </h2>
+      <h2>Nouvelle partie</h2>
 
       <p>
         Supprime toutes les équipes, leurs réponses,
@@ -489,15 +397,11 @@ label {
 
       <p>
         <strong>
-          Les manches et les réponses de référence
-          seront conservées.
+          Les manches et les réponses de référence seront conservées.
         </strong>
       </p>
 
-      <button
-        id="resetGameButton"
-        class="secondary"
-      >
+      <button id="resetGameButton" class="secondary">
         Réinitialiser la partie
       </button>
 
@@ -506,14 +410,7 @@ label {
   </section>
 
 
-  <!-- =========================
-       CORRECTION
-       ========================= -->
-
-  <section
-    id="correctSection"
-    hidden
-  >
+  <section id="correctSection" hidden>
 
     <div class="card correction-controls">
 
@@ -524,32 +421,18 @@ label {
         </label>
 
         <select id="correctionRound">
-
-          <option value="1">
-            Manche 1
-          </option>
-
-          <option value="2">
-            Manche 2
-          </option>
-
-          <option value="3">
-            Manche 3
-          </option>
-
+          <option value="1">Manche 1</option>
+          <option value="2">Manche 2</option>
+          <option value="3">Manche 3</option>
         </select>
 
       </div>
-
 
       <div>
 
         <label>&nbsp;</label>
 
-        <button
-          id="refreshButton"
-          class="secondary full"
-        >
+        <button id="refreshButton" class="secondary full">
           Actualiser les réponses
         </button>
 
@@ -558,65 +441,38 @@ label {
     </div>
 
 
-    <div id="correctionArea">
+    <div class="card">
 
-      <div class="card">
+      <h2 id="correctionTitle">
+        Correction
+      </h2>
 
-        <h2 id="correctionTitle">
-          Correction
-        </h2>
+      <div id="referenceAnswer" class="reference"></div>
 
-        <div
-          id="referenceAnswer"
-          class="reference"
-        ></div>
+      <button id="validateAllButton" class="secondary">
+        Tout valider
+      </button>
 
+      <div id="teamAnswers" style="margin-top:18px;"></div>
 
-        <button
-          id="validateAllButton"
-          class="secondary"
-        >
-          Tout valider
+      <div class="navigation">
+
+        <button id="previousSong" class="secondary">
+          ← Précédente
         </button>
 
-
-        <div
-          id="teamAnswers"
-          style="margin-top:18px;"
-        ></div>
-
-
-        <div class="navigation">
-
-          <button
-            id="previousSong"
-            class="secondary"
-          >
-            ← Précédente
-          </button>
-
-          <div
-            id="navigationStatus"
-            class="navigation-status"
-          >
-            Chanson 1 / 10
-          </div>
-
-          <button
-            id="nextSong"
-            class="secondary"
-          >
-            Suivante →
-          </button>
-
+        <div id="navigationStatus" class="navigation-status">
+          Chanson 1 / 10
         </div>
+
+        <button id="nextSong" class="secondary">
+          Suivante →
+        </button>
 
       </div>
 
     </div>
 
-
-    <!-- CLASSEMENTS -->
 
     <div class="rankings">
 
@@ -633,9 +489,7 @@ label {
 
       <div class="card">
 
-        <h2>
-          Classement général
-        </h2>
+        <h2>Classement général</h2>
 
         <div id="globalRanking"></div>
 
@@ -651,10 +505,6 @@ label {
 
 
 <script type="module">
-
-/* =========================
-   FIREBASE
-   ========================= */
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
@@ -678,28 +528,13 @@ from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
 
 const firebaseConfig = {
-
-  apiKey:
-    "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
-
-  authDomain:
-    "le-blind-test.firebaseapp.com",
-
-  databaseURL:
-    "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
-
-  projectId:
-    "le-blind-test",
-
-  storageBucket:
-    "le-blind-test.firebasestorage.app",
-
-  messagingSenderId:
-    "551170415765",
-
-  appId:
-    "1:551170415765:web:3cc00ae2c266d36e628f9c"
-
+  apiKey: "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
+  authDomain: "le-blind-test.firebaseapp.com",
+  databaseURL: "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "le-blind-test",
+  storageBucket: "le-blind-test.firebasestorage.app",
+  messagingSenderId: "551170415765",
+  appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
 };
 
 
@@ -707,19 +542,10 @@ const ADMIN_UID =
   "fMWxlPehvGQs0ggcZDTwAbe2eDp2";
 
 
-const app =
-  initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
 
-const auth =
-  getAuth(app);
-
-const database =
-  getDatabase(app);
-
-
-/* =========================
-   DONNEES
-   ========================= */
 
 let settings = null;
 
@@ -739,54 +565,24 @@ let correctionRound = 1;
 let correctionSong = 1;
 
 
-/* =========================
-   DOM
-   ========================= */
+const loginSection = document.getElementById("login");
+const adminSection = document.getElementById("admin");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginButton = document.getElementById("loginButton");
+const logoutButton = document.getElementById("logoutButton");
+const loginStatus = document.getElementById("loginStatus");
 
-const loginSection =
-  document.getElementById("login");
+const prepareTab = document.getElementById("prepareTab");
+const correctTab = document.getElementById("correctTab");
+const prepareSection = document.getElementById("prepareSection");
+const correctSection = document.getElementById("correctSection");
 
-const adminSection =
-  document.getElementById("admin");
+const roundsContainer = document.getElementById("rounds");
+const currentRoundSelect = document.getElementById("currentRound");
 
-const emailInput =
-  document.getElementById("email");
-
-const passwordInput =
-  document.getElementById("password");
-
-const loginButton =
-  document.getElementById("loginButton");
-
-const logoutButton =
-  document.getElementById("logoutButton");
-
-const loginStatus =
-  document.getElementById("loginStatus");
-
-const prepareTab =
-  document.getElementById("prepareTab");
-
-const correctTab =
-  document.getElementById("correctTab");
-
-const prepareSection =
-  document.getElementById("prepareSection");
-
-const correctSection =
-  document.getElementById("correctSection");
-
-const roundsContainer =
-  document.getElementById("rounds");
-
-const currentRoundSelect =
-  document.getElementById("currentRound");
-
-const saveButton =
-  document.getElementById("saveButton");
-
-const saveStatus =
-  document.getElementById("saveStatus");
+const saveButton = document.getElementById("saveButton");
+const saveStatus = document.getElementById("saveStatus");
 
 const saveButtonBottom =
   document.getElementById("saveButtonBottom");
@@ -814,56 +610,40 @@ const globalRanking =
 
 
 /* =========================
-   CREATION DES MANCHES
+   CREER LES MANCHES
    ========================= */
 
 function createRounds() {
 
   roundsContainer.innerHTML = "";
 
-
-  for (
-    let round = 1;
-    round <= 3;
-    round++
-  ) {
+  for (let round = 1; round <= 3; round++) {
 
     const secondField =
       round === 3
         ? "Comédie musicale"
         : "Artiste(s)";
 
-
     const section =
       document.createElement("section");
 
-
-    section.className =
-      "round";
-
+    section.className = "round";
 
     section.innerHTML = `
-
       <div class="card">
 
         <div class="round-title">
 
-          <h2>
-            Manche ${round}
-          </h2>
+          <h2>Manche ${round}</h2>
 
           <div>
-
-            <label>
-              Nom / thème de la manche
-            </label>
+            <label>Nom / thème de la manche</label>
 
             <input
               id="round-name-${round}"
               type="text"
               placeholder="Ex. Années 2000"
             >
-
           </div>
 
         </div>
@@ -873,76 +653,43 @@ function createRounds() {
       </div>
     `;
 
-
-    roundsContainer.appendChild(
-      section
-    );
-
+    roundsContainer.appendChild(section);
 
     const songs =
       document.getElementById(
         `songs-${round}`
       );
 
-
-    for (
-      let song = 1;
-      song <= 10;
-      song++
-    ) {
+    for (let song = 1; song <= 10; song++) {
 
       const row =
         document.createElement("div");
 
-
-      row.className =
-        "song-row";
-
+      row.className = "song-row";
 
       row.innerHTML = `
-
         <div class="song-number">
           ${song}
         </div>
 
         <div>
-
-          <label>
-            Titre
-          </label>
-
-          <input
-            id="title-${round}-${song}"
-            type="text"
-          >
-
+          <label>Titre</label>
+          <input id="title-${round}-${song}" type="text">
         </div>
 
         <div>
-
-          <label>
-            ${secondField}
-          </label>
-
-          <input
-            id="second-${round}-${song}"
-            type="text"
-          >
-
+          <label>${secondField}</label>
+          <input id="second-${round}-${song}" type="text">
         </div>
       `;
 
-
-      songs.appendChild(
-        row
-      );
+      songs.appendChild(row);
 
     }
 
   }
 
 }
-
 
 createRounds();
 
@@ -958,7 +705,6 @@ loginButton.addEventListener(
     loginStatus.textContent =
       "Connexion…";
 
-
     try {
 
       const result =
@@ -968,11 +714,7 @@ loginButton.addEventListener(
           passwordInput.value
         );
 
-
-      if (
-        result.user.uid
-        !== ADMIN_UID
-      ) {
+      if (result.user.uid !== ADMIN_UID) {
 
         await signOut(auth);
 
@@ -982,7 +724,6 @@ loginButton.addEventListener(
         return;
 
       }
-
 
       loginStatus.textContent = "";
 
@@ -1007,17 +748,12 @@ logoutButton.addEventListener(
 );
 
 
-/* =========================
-   ETAT DE CONNEXION
-   ========================= */
-
 onAuthStateChanged(
   auth,
   async user => {
 
     if (
-      user
-      &&
+      user &&
       user.uid === ADMIN_UID
     ) {
 
@@ -1047,13 +783,8 @@ prepareTab.addEventListener(
   "click",
   () => {
 
-    prepareTab
-      .classList
-      .add("active");
-
-    correctTab
-      .classList
-      .remove("active");
+    prepareTab.classList.add("active");
+    correctTab.classList.remove("active");
 
     prepareSection.hidden = false;
     correctSection.hidden = true;
@@ -1066,25 +797,16 @@ correctTab.addEventListener(
   "click",
   async () => {
 
-    correctTab
-      .classList
-      .add("active");
-
-    prepareTab
-      .classList
-      .remove("active");
+    correctTab.classList.add("active");
+    prepareTab.classList.remove("active");
 
     correctSection.hidden = false;
     prepareSection.hidden = true;
 
-
     correctionRound =
-      Number(
-        correctionRoundSelect.value
-      );
+      Number(correctionRoundSelect.value);
 
     correctionSong = 1;
-
 
     await loadAllGameData();
 
@@ -1093,7 +815,7 @@ correctTab.addEventListener(
 
 
 /* =========================
-   CHARGER CONFIGURATION
+   CHARGER CONFIGURATION PRIVEE
    ========================= */
 
 async function loadSettings() {
@@ -1108,38 +830,27 @@ async function loadSettings() {
         )
       );
 
-
     if (!snapshot.exists()) {
       return;
     }
 
-
     settings =
       snapshot.val();
-
 
     currentRoundSelect.value =
       settings.currentRound || 1;
 
-
     correctionRoundSelect.value =
       settings.currentRound || 1;
 
-
-    for (
-      let round = 1;
-      round <= 3;
-      round++
-    ) {
+    for (let round = 1; round <= 3; round++) {
 
       const roundData =
         settings.rounds?.[round];
 
-
       if (!roundData) {
         continue;
       }
-
 
       document
         .getElementById(
@@ -1148,21 +859,14 @@ async function loadSettings() {
         .value =
           roundData.name || "";
 
-
-      for (
-        let song = 1;
-        song <= 10;
-        song++
-      ) {
+      for (let song = 1; song <= 10; song++) {
 
         const answer =
           roundData.answers?.[song];
 
-
         if (!answer) {
           continue;
         }
-
 
         document
           .getElementById(
@@ -1170,7 +874,6 @@ async function loadSettings() {
           )
           .value =
             answer.title || "";
-
 
         document
           .getElementById(
@@ -1195,14 +898,13 @@ async function loadSettings() {
 
 
 /* =========================
-   ENREGISTRER CONFIGURATION
+   ENREGISTRER
    ========================= */
 
 async function saveSettings() {
 
   saveButton.disabled = true;
   saveButtonBottom.disabled = true;
-
 
   saveStatus.textContent =
     "Enregistrement…";
@@ -1214,29 +916,18 @@ async function saveSettings() {
   const data = {
 
     currentRound:
-      Number(
-        currentRoundSelect.value
-      ),
+      Number(currentRoundSelect.value),
 
     rounds: {}
 
   };
 
 
-  for (
-    let round = 1;
-    round <= 3;
-    round++
-  ) {
+  for (let round = 1; round <= 3; round++) {
 
     const answers = {};
 
-
-    for (
-      let song = 1;
-      song <= 10;
-      song++
-    ) {
+    for (let song = 1; song <= 10; song++) {
 
       answers[song] = {
 
@@ -1278,7 +969,43 @@ async function saveSettings() {
   }
 
 
+  /*
+    Version publique :
+    aucune réponse de référence.
+  */
+
+  const publicData = {
+
+    currentRound:
+      data.currentRound,
+
+    rounds: {
+
+      1: {
+        name:
+          data.rounds[1].name
+      },
+
+      2: {
+        name:
+          data.rounds[2].name
+      },
+
+      3: {
+        name:
+          data.rounds[3].name
+      }
+
+    }
+
+  };
+
+
   try {
+
+    /*
+      Données privées admin.
+    */
 
     await set(
       ref(
@@ -1286,6 +1013,19 @@ async function saveSettings() {
         "settings"
       ),
       data
+    );
+
+
+    /*
+      Données accessibles aux équipes.
+    */
+
+    await set(
+      ref(
+        database,
+        "publicSettings"
+      ),
+      publicData
     );
 
 
@@ -1303,7 +1043,6 @@ async function saveSettings() {
   catch (error) {
 
     console.error(error);
-
 
     saveStatus.textContent =
       "L'enregistrement a échoué.";
@@ -1325,7 +1064,6 @@ saveButton.addEventListener(
   saveSettings
 );
 
-
 saveButtonBottom.addEventListener(
   "click",
   saveSettings
@@ -1333,19 +1071,14 @@ saveButtonBottom.addEventListener(
 
 
 /* =========================
-   CHARGER DONNEES DU JEU
+   DONNEES DU JEU
    ========================= */
 
 async function loadAllGameData() {
 
   await loadSettings();
 
-
-  for (
-    let round = 1;
-    round <= 3;
-    round++
-  ) {
+  for (let round = 1; round <= 3; round++) {
 
     const submissionsSnapshot =
       await get(
@@ -1354,7 +1087,6 @@ async function loadAllGameData() {
           `rounds/${round}/submissions`
         )
       );
-
 
     submissions[round] =
       submissionsSnapshot.exists()
@@ -1370,14 +1102,12 @@ async function loadAllGameData() {
         )
       );
 
-
     corrections[round] =
       correctionsSnapshot.exists()
         ? correctionsSnapshot.val()
         : {};
 
   }
-
 
   renderCorrection();
   renderRankings();
@@ -1392,17 +1122,13 @@ async function loadAllGameData() {
 function renderCorrection() {
 
   const roundData =
-    settings
-      ?.rounds
-      ?.[correctionRound];
-
+    settings?.rounds?.[correctionRound];
 
   const expected =
     roundData
       ?.answers
       ?.[correctionSong]
     || {};
-
 
   const secondLabel =
     correctionRound === 3
@@ -1411,31 +1137,24 @@ function renderCorrection() {
 
 
   document
-    .getElementById(
-      "correctionTitle"
-    )
+    .getElementById("correctionTitle")
     .textContent =
       `Manche ${correctionRound} — ${roundData?.name || ""}`;
 
 
   referenceAnswer.innerHTML = `
-
     <strong>
       Chanson ${correctionSong} — Réponse attendue
     </strong>
 
     <div>
       Titre :
-      <b>
-        ${escapeHTML(expected.title || "—")}
-      </b>
+      <b>${escapeHTML(expected.title || "—")}</b>
     </div>
 
     <div>
       ${secondLabel} :
-      <b>
-        ${escapeHTML(expected.second || "—")}
-      </b>
+      <b>${escapeHTML(expected.second || "—")}</b>
     </div>
   `;
 
@@ -1445,17 +1164,13 @@ function renderCorrection() {
 
 
   document
-    .getElementById(
-      "previousSong"
-    )
+    .getElementById("previousSong")
     .disabled =
       correctionSong === 1;
 
 
   document
-    .getElementById(
-      "nextSong"
-    )
+    .getElementById("nextSong")
     .disabled =
       correctionSong === 10;
 
@@ -1473,7 +1188,6 @@ function renderCorrection() {
   if (teams.length === 0) {
 
     teamAnswers.innerHTML = `
-
       <p class="empty">
         Aucune équipe n'a encore envoyé cette manche.
       </p>
@@ -1487,10 +1201,9 @@ function renderCorrection() {
   teams
     .sort(
       (a, b) =>
-        a[1]
-          .teamName
+        (a[1].teamName || "")
           .localeCompare(
-            b[1].teamName,
+            b[1].teamName || "",
             "fr"
           )
     )
@@ -1503,21 +1216,17 @@ function renderCorrection() {
             ?.[correctionSong]
           || {};
 
-
         const correction =
           corrections[correctionRound]
             ?.[teamId]
             ?.[correctionSong]
           || {};
 
-
         const titleAccepted =
           correction.title === true;
 
-
         const secondAccepted =
           correction.second === true;
-
 
         const score =
           calculateSongScore(
@@ -1525,23 +1234,17 @@ function renderCorrection() {
             secondAccepted
           );
 
-
         const card =
-          document.createElement(
-            "div"
-          );
-
+          document.createElement("div");
 
         card.className =
           "team-answer";
 
-
         card.innerHTML = `
-
           <div class="team-header">
 
             <strong>
-              ${escapeHTML(submission.teamName)}
+              ${escapeHTML(submission.teamName || "Équipe")}
             </strong>
 
             <strong>
@@ -1550,12 +1253,10 @@ function renderCorrection() {
 
           </div>
 
-
           <div class="answer-buttons">
 
             <button
-              class="answer-button
-              ${titleAccepted ? "accepted" : ""}"
+              class="answer-button ${titleAccepted ? "accepted" : ""}"
               data-team="${teamId}"
               data-field="title"
             >
@@ -1564,22 +1265,16 @@ function renderCorrection() {
                 Titre
               </span>
 
-              <span class="answer-text">
-
+              <span>
                 ${titleAccepted ? "✓ " : ""}
-
-                ${escapeHTML(
-                  answer.title || "—"
-                )}
-
+                ${escapeHTML(answer.title || "—")}
               </span>
 
             </button>
 
 
             <button
-              class="answer-button
-              ${secondAccepted ? "accepted" : ""}"
+              class="answer-button ${secondAccepted ? "accepted" : ""}"
               data-team="${teamId}"
               data-field="second"
             >
@@ -1588,14 +1283,9 @@ function renderCorrection() {
                 ${secondLabel}
               </span>
 
-              <span class="answer-text">
-
+              <span>
                 ${secondAccepted ? "✓ " : ""}
-
-                ${escapeHTML(
-                  answer.second || "—"
-                )}
-
+                ${escapeHTML(answer.second || "—")}
               </span>
 
             </button>
@@ -1603,19 +1293,14 @@ function renderCorrection() {
           </div>
         `;
 
-
-        teamAnswers.appendChild(
-          card
-        );
+        teamAnswers.appendChild(card);
 
       }
     );
 
 
   document
-    .querySelectorAll(
-      ".answer-button"
-    )
+    .querySelectorAll(".answer-button")
     .forEach(
       button => {
 
@@ -1623,16 +1308,9 @@ function renderCorrection() {
           "click",
           async () => {
 
-            const teamId =
-              button.dataset.team;
-
-            const field =
-              button.dataset.field;
-
-
             await toggleCorrection(
-              teamId,
-              field
+              button.dataset.team,
+              button.dataset.field
             );
 
           }
@@ -1645,7 +1323,7 @@ function renderCorrection() {
 
 
 /* =========================
-   MODIFIER UNE CORRECTION
+   MODIFIER CORRECTION
    ========================= */
 
 async function toggleCorrection(
@@ -1684,9 +1362,7 @@ async function toggleCorrection(
   );
 
 
-  if (
-    !corrections[correctionRound][teamId]
-  ) {
+  if (!corrections[correctionRound][teamId]) {
 
     corrections[correctionRound][teamId] =
       {};
@@ -1711,9 +1387,7 @@ async function toggleCorrection(
    ========================= */
 
 document
-  .getElementById(
-    "validateAllButton"
-  )
+  .getElementById("validateAllButton")
   .addEventListener(
     "click",
     async () => {
@@ -1725,9 +1399,7 @@ document
         );
 
 
-      for (
-        const teamId of teams
-      ) {
+      for (const teamId of teams) {
 
         const updated = {
           title: true,
@@ -1744,13 +1416,10 @@ document
         );
 
 
-        if (
-          !corrections[correctionRound]
-            [teamId]
-        ) {
+        if (!corrections[correctionRound][teamId]) {
 
-          corrections[correctionRound]
-            [teamId] = {};
+          corrections[correctionRound][teamId] =
+            {};
 
         }
 
@@ -1771,23 +1440,18 @@ document
 
 
 /* =========================
-   NAVIGATION CORRECTION
+   NAVIGATION
    ========================= */
 
 document
-  .getElementById(
-    "previousSong"
-  )
+  .getElementById("previousSong")
   .addEventListener(
     "click",
     () => {
 
-      if (
-        correctionSong > 1
-      ) {
+      if (correctionSong > 1) {
 
         correctionSong--;
-
         renderCorrection();
 
       }
@@ -1797,19 +1461,14 @@ document
 
 
 document
-  .getElementById(
-    "nextSong"
-  )
+  .getElementById("nextSong")
   .addEventListener(
     "click",
     () => {
 
-      if (
-        correctionSong < 10
-      ) {
+      if (correctionSong < 10) {
 
         correctionSong++;
-
         renderCorrection();
 
       }
@@ -1818,29 +1477,25 @@ document
   );
 
 
-correctionRoundSelect
-  .addEventListener(
-    "change",
-    async () => {
+correctionRoundSelect.addEventListener(
+  "change",
+  async () => {
 
-      correctionRound =
-        Number(
-          correctionRoundSelect.value
-        );
+    correctionRound =
+      Number(
+        correctionRoundSelect.value
+      );
 
-      correctionSong = 1;
+    correctionSong = 1;
 
+    await loadAllGameData();
 
-      await loadAllGameData();
-
-    }
-  );
+  }
+);
 
 
 document
-  .getElementById(
-    "refreshButton"
-  )
+  .getElementById("refreshButton")
   .addEventListener(
     "click",
     loadAllGameData
@@ -1848,7 +1503,7 @@ document
 
 
 /* =========================
-   CALCUL DES SCORES
+   SCORES
    ========================= */
 
 function calculateSongScore(
@@ -1858,27 +1513,17 @@ function calculateSongScore(
 
   let score = 0;
 
-
   if (title) {
     score += 2;
   }
-
 
   if (second) {
     score += 2;
   }
 
-
-  if (
-    title
-    &&
-    second
-  ) {
-
+  if (title && second) {
     score += 1;
-
   }
-
 
   return score;
 
@@ -1892,19 +1537,13 @@ function calculateRoundScore(
 
   let total = 0;
 
-
-  for (
-    let song = 1;
-    song <= 10;
-    song++
-  ) {
+  for (let song = 1; song <= 10; song++) {
 
     const correction =
       corrections[round]
         ?.[teamId]
         ?.[song]
       || {};
-
 
     total +=
       calculateSongScore(
@@ -1913,7 +1552,6 @@ function calculateRoundScore(
       );
 
   }
-
 
   return total;
 
@@ -1945,8 +1583,7 @@ function renderRoundRanking() {
         teamId,
 
         name:
-          data.teamName
-          || "Équipe",
+          data.teamName || "Équipe",
 
         score:
           calculateRoundScore(
@@ -1976,9 +1613,7 @@ function renderRoundRanking() {
 
 
   document
-    .getElementById(
-      "roundRankingTitle"
-    )
+    .getElementById("roundRankingTitle")
     .textContent =
       `Classement — Manche ${correctionRound}${roundName ? " · " + roundName : ""}`;
 
@@ -1997,11 +1632,7 @@ function renderGlobalRanking() {
   const teamMap = {};
 
 
-  for (
-    let round = 1;
-    round <= 3;
-    round++
-  ) {
+  for (let round = 1; round <= 3; round++) {
 
     for (
       const [teamId, data]
@@ -2011,17 +1642,14 @@ function renderGlobalRanking() {
       )
     ) {
 
-      if (
-        !teamMap[teamId]
-      ) {
+      if (!teamMap[teamId]) {
 
         teamMap[teamId] = {
 
           teamId,
 
           name:
-            data.teamName
-            || "Équipe",
+            data.teamName || "Équipe",
 
           score: 0
 
@@ -2047,9 +1675,7 @@ function renderGlobalRanking() {
 
 
   const teams =
-    Object.values(
-      teamMap
-    )
+    Object.values(teamMap)
     .sort(
       (a, b) =>
         b.score - a.score
@@ -2071,22 +1697,14 @@ function renderGlobalRanking() {
     );
 
 
-  const maxScore =
-    currentRound * 50;
-
-
   renderRankingList(
     globalRanking,
     teams,
-    maxScore
+    currentRound * 50
   );
 
 }
 
-
-/* =========================
-   AFFICHAGE CLASSEMENT
-   ========================= */
 
 function renderRankingList(
   container,
@@ -2097,12 +1715,9 @@ function renderRankingList(
   container.innerHTML = "";
 
 
-  if (
-    teams.length === 0
-  ) {
+  if (teams.length === 0) {
 
     container.innerHTML = `
-
       <p class="empty">
         Aucun score pour le moment.
       </p>
@@ -2124,8 +1739,7 @@ function renderRankingList(
 
 
       if (
-        previousScore !== null
-        &&
+        previousScore !== null &&
         team.score === previousScore
       ) {
 
@@ -2154,36 +1768,26 @@ function renderRankingList(
 
 
       if (rank === 1) {
-
         rankDisplay = "🥇";
-
       }
 
       else if (rank === 2) {
-
         rankDisplay = "🥈";
-
       }
 
       else if (rank === 3) {
-
         rankDisplay = "🥉";
-
       }
 
 
       const row =
-        document.createElement(
-          "div"
-        );
-
+        document.createElement("div");
 
       row.className =
         "ranking-row";
 
 
       row.innerHTML = `
-
         <div class="rank">
           ${rankDisplay}
         </div>
@@ -2198,9 +1802,7 @@ function renderRankingList(
       `;
 
 
-      container.appendChild(
-        row
-      );
+      container.appendChild(row);
 
     }
   );
@@ -2209,25 +1811,24 @@ function renderRankingList(
 
 
 /* =========================
-   REINITIALISER LA PARTIE
+   REINITIALISATION
    ========================= */
 
 document
-  .getElementById(
-    "resetGameButton"
-  )
+  .getElementById("resetGameButton")
   .addEventListener(
     "click",
     async () => {
 
       const confirmation =
-  confirm(
-    "Êtes-vous sûr de vouloir réinitialiser la partie ? Toutes les équipes, réponses, corrections et scores seront supprimés."
-  );
+        confirm(
+          "Êtes-vous sûr de vouloir réinitialiser la partie ? Toutes les équipes, réponses, corrections et scores seront supprimés."
+        );
 
-if (!confirmation) {
-  return;
-}
+
+      if (!confirmation) {
+        return;
+      }
 
 
       const button =
@@ -2244,10 +1845,6 @@ if (!confirmation) {
 
       try {
 
-        /*
-          Supprimer les équipes.
-        */
-
         await remove(
           ref(
             database,
@@ -2256,16 +1853,7 @@ if (!confirmation) {
         );
 
 
-        /*
-          Supprimer réponses et corrections
-          des trois manches.
-        */
-
-        for (
-          let round = 1;
-          round <= 3;
-          round++
-        ) {
+        for (let round = 1; round <= 3; round++) {
 
           await remove(
             ref(
@@ -2273,7 +1861,6 @@ if (!confirmation) {
               `rounds/${round}/submissions`
             )
           );
-
 
           await remove(
             ref(
@@ -2284,11 +1871,6 @@ if (!confirmation) {
 
         }
 
-
-        /*
-          Réinitialiser les données locales
-          de l'interface admin.
-        */
 
         submissions = {
           1: {},
@@ -2305,14 +1887,8 @@ if (!confirmation) {
 
 
         alert(
-          "Partie réinitialisée ✓\n\nToutes les équipes, réponses, corrections et scores ont été supprimés."
+          "Partie réinitialisée ✓"
         );
-
-
-        button.textContent =
-          "Réinitialiser la partie";
-
-        button.disabled = false;
 
       }
 
@@ -2320,18 +1896,17 @@ if (!confirmation) {
 
         console.error(error);
 
-
         alert(
           "La réinitialisation a échoué."
         );
 
-
-        button.textContent =
-          "Réinitialiser la partie";
-
-        button.disabled = false;
-
       }
+
+
+      button.textContent =
+        "Réinitialiser la partie";
+
+      button.disabled = false;
 
     }
   );
@@ -2345,30 +1920,11 @@ function escapeHTML(value) {
 
   return String(value)
 
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 }
 
