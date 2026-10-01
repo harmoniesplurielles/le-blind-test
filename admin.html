@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administration — Le Blind Test</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f6f6f6;
+  color: #222;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 18px 70px;
+}
+
+h1 { margin-bottom: 5px; }
+
+.subtitle {
+  color: #666;
+  margin-top: 0;
+}
+
+.card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.round {
+  margin-top: 28px;
+}
+
+.song {
+  display: grid;
+  grid-template-columns: 55px 1fr 1fr;
+  gap: 10px;
+  align-items: end;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.song:last-child {
+  border-bottom: none;
+}
+
+.song-number {
+  font-weight: bold;
+  padding-bottom: 12px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 11px;
+  font-size: 16px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: white;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 13px 18px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary {
+  background: #222;
+  color: white;
+}
+
+.secondary {
+  background: #e8e8e8;
+  color: #222;
+}
+
+.full {
+  width: 100%;
+}
+
+#login {
+  max-width: 450px;
+  margin: 60px auto;
+}
+
+#login input {
+  margin-bottom: 12px;
+}
+
+#loginStatus,
+#saveStatus {
+  margin-top: 14px;
+  font-weight: bold;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.round-title {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 15px;
+  align-items: end;
+}
+
+.topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+@media (max-width: 650px) {
+
+  .song {
+    grid-template-columns: 1fr;
+  }
+
+  .song-number {
+    padding-bottom: 0;
+  }
+
+  .round-title,
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .topline {
+    display: block;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<section id="login">
+
+  <div class="card">
+
+    <h1>Administration</h1>
+
+    <p class="subtitle">
+      Le Blind Test
+    </p>
+
+    <label for="email">
+      E-mail
+    </label>
+
+    <input
+      id="email"
+      type="email"
+      autocomplete="username"
+    >
+
+    <label for="password">
+      Mot de passe
+    </label>
+
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+    >
+
+    <button
+      id="loginButton"
+      class="primary full"
+    >
+      Se connecter
+    </button>
+
+    <div id="loginStatus"></div>
+
+  </div>
+
+</section>
+
+
+<section id="admin" hidden>
+
+  <div class="topline">
+
+    <div>
+      <h1>Préparer la soirée</h1>
+
+      <p class="subtitle">
+        Configure les trois manches avant le début du blind test.
+      </p>
+    </div>
+
+    <button
+      id="logoutButton"
+      class="secondary"
+    >
+      Déconnexion
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="toolbar">
+
+      <div>
+
+        <label for="currentRound">
+          Manche actuellement ouverte
+        </label>
+
+        <select id="currentRound">
+          <option value="1">Manche 1</option>
+          <option value="2">Manche 2</option>
+          <option value="3">Manche 3</option>
+        </select>
+
+      </div>
+
+      <button
+        id="saveButton"
+        class="primary"
+      >
+        Enregistrer
+      </button>
+
+    </div>
+
+    <div id="saveStatus"></div>
+
+  </div>
+
+
+  <div id="rounds"></div>
+
+</section>
+
+</main>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  get,
+  set
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
+  authDomain: "le-blind-test.firebaseapp.com",
+  databaseURL: "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "le-blind-test",
+  storageBucket: "le-blind-test.firebasestorage.app",
+  messagingSenderId: "551170415765",
+  appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
+};
+
+const ADMIN_UID =
+  "fMWxlPehvGQs0ggcZDTwAbe2eDp2";
+
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const database =
+  getDatabase(app);
+
+
+/* =========================
+   ÉLÉMENTS
+   ========================= */
+
+const loginSection =
+  document.getElementById("login");
+
+const adminSection =
+  document.getElementById("admin");
+
+const emailInput =
+  document.getElementById("email");
+
+const passwordInput =
+  document.getElementById("password");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+const logoutButton =
+  document.getElementById("logoutButton");
+
+const loginStatus =
+  document.getElementById("loginStatus");
+
+const saveStatus =
+  document.getElementById("saveStatus");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const currentRoundSelect =
+  document.getElementById("currentRound");
+
+const roundsContainer =
+  document.getElementById("rounds");
+
+
+/* =========================
+   CRÉATION DES 3 MANCHES
+   ========================= */
+
+function createRounds() {
+
+  roundsContainer.innerHTML = "";
+
+  for (let round = 1; round <= 3; round++) {
+
+    const secondField =
+      round === 3
+        ? "Comédie musicale"
+        : "Artiste(s)";
+
+    const section =
+      document.createElement("section");
+
+    section.className = "round";
+
+    section.innerHTML = `
+
+      <div class="card">
+
+        <div class="round-title">
+
+          <h2>
+            Manche ${round}
+          </h2>
+
+          <div>
+
+            <label for="round-name-${round}">
+              Nom / thème de la manche
+            </label>
+
+            <input
+              id="round-name-${round}"
+              type="text"
+              placeholder="Ex. Années 2000"
+            >
+
+          </div>
+
+        </div>
+
+        <div id="songs-${round}"></div>
+
+      </div>
+    `;
+
+    roundsContainer.appendChild(section);
+
+    const songs =
+      document.getElementById(
+        `songs-${round}`
+      );
+
+    for (let song = 1; song <= 10; song++) {
+
+      const row =
+        document.createElement("div");
+
+      row.className = "song";
+
+      row.innerHTML = `
+
+        <div class="song-number">
+          ${song}
+        </div>
+
+        <div>
+
+          <label for="title-${round}-${song}">
+            Titre
+          </label>
+
+          <input
+            id="title-${round}-${song}"
+            type="text"
+            autocomplete="off"
+          >
+
+        </div>
+
+        <div>
+
+          <label for="second-${round}-${song}">
+            ${secondField}
+          </label>
+
+          <input
+            id="second-${round}-${song}"
+            type="text"
+            autocomplete="off"
+          >
+
+        </div>
+      `;
+
+      songs.appendChild(row);
+    }
+  }
+}
+
+createRounds();
+
+
+/* =========================
+   CONNEXION
+   ========================= */
+
+loginButton.addEventListener(
+  "click",
+  async () => {
+
+    loginStatus.textContent =
+      "Connexion…";
+
+    try {
+
+      const result =
+        await signInWithEmailAndPassword(
+          auth,
+          emailInput.value.trim(),
+          passwordInput.value
+        );
+
+      if (result.user.uid !== ADMIN_UID) {
+
+        await signOut(auth);
+
+        loginStatus.textContent =
+          "Ce compte n'est pas autorisé.";
+
+        return;
+      }
+
+      loginStatus.textContent = "";
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      loginStatus.textContent =
+        "Connexion impossible. Vérifie l'e-mail et le mot de passe.";
+    }
+
+  }
+);
+
+
+/* =========================
+   DÉCONNEXION
+   ========================= */
+
+logoutButton.addEventListener(
+  "click",
+  async () => {
+
+    await signOut(auth);
+
+  }
+);
+
+
+/* =========================
+   ÉTAT DE CONNEXION
+   ========================= */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if (
+      user &&
+      user.uid === ADMIN_UID
+    ) {
+
+      loginSection.hidden = true;
+      adminSection.hidden = false;
+
+      await loadSettings();
+
+    }
+
+    else {
+
+      loginSection.hidden = false;
+      adminSection.hidden = true;
+
+    }
+
+  }
+);
+
+
+/* =========================
+   CHARGEMENT
+   ========================= */
+
+async function loadSettings() {
+
+  saveStatus.textContent =
+    "Chargement…";
+
+  try {
+
+    const snapshot =
+      await get(
+        ref(database, "settings")
+      );
+
+    if (!snapshot.exists()) {
+
+      saveStatus.textContent =
+        "Aucune soirée enregistrée pour le moment.";
+
+      return;
+    }
+
+    const data =
+      snapshot.val();
+
+
+    if (data.currentRound) {
+
+      currentRoundSelect.value =
+        data.currentRound;
+    }
+
+
+    for (let round = 1; round <= 3; round++) {
+
+      const roundData =
+        data.rounds?.[round];
+
+      if (!roundData) continue;
+
+
+      document
+        .getElementById(
+          `round-name-${round}`
+        )
+        .value =
+          roundData.name || "";
+
+
+      for (let song = 1; song <= 10; song++) {
+
+        const answer =
+          roundData.answers?.[song];
+
+        if (!answer) continue;
+
+
+        document
+          .getElementById(
+            `title-${round}-${song}`
+          )
+          .value =
+            answer.title || "";
+
+
+        document
+          .getElementById(
+            `second-${round}-${song}`
+          )
+          .value =
+            answer.second || "";
+      }
+    }
+
+    saveStatus.textContent =
+      "Configuration chargée.";
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    saveStatus.textContent =
+      "Impossible de charger la configuration.";
+
+  }
+}
+
+
+/* =========================
+   ENREGISTREMENT
+   ========================= */
+
+saveButton.addEventListener(
+  "click",
+  async () => {
+
+    saveButton.disabled = true;
+
+    saveStatus.textContent =
+      "Enregistrement…";
+
+
+    const data = {
+
+      currentRound:
+        Number(
+          currentRoundSelect.value
+        ),
+
+      rounds: {}
+
+    };
+
+
+    for (let round = 1; round <= 3; round++) {
+
+      const answers = {};
+
+
+      for (let song = 1; song <= 10; song++) {
+
+        answers[song] = {
+
+          title:
+            document
+              .getElementById(
+                `title-${round}-${song}`
+              )
+              .value
+              .trim(),
+
+          second:
+            document
+              .getElementById(
+                `second-${round}-${song}`
+              )
+              .value
+              .trim()
+
+        };
+
+      }
+
+
+      data.rounds[round] = {
+
+        name:
+          document
+            .getElementById(
+              `round-name-${round}`
+            )
+            .value
+            .trim(),
+
+        answers:
+          answers
+
+      };
+
+    }
+
+
+    try {
+
+      await set(
+        ref(database, "settings"),
+        data
+      );
+
+      saveStatus.textContent =
+        "Soirée enregistrée ✓";
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      saveStatus.textContent =
+        "L'enregistrement a échoué.";
+
+    }
+
+
+    saveButton.disabled = false;
+
+  }
+);
+
+</script>
+
+</body>
+</html>
