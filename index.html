@@ -1,323 +1,415 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Le Blind Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * { box-sizing: border-box; }
+<title>Le Blind Test</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
-      color: #222;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    main {
-      max-width: 650px;
-      margin: auto;
-      padding: 24px 16px 60px;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f6f6f6;
+  color: #222;
+}
 
-    h1 { margin-bottom: 5px; }
+main {
+  max-width: 650px;
+  margin: auto;
+  padding: 24px 16px 60px;
+}
 
-    .subtitle {
-      color: #666;
-      margin-top: 0;
-      margin-bottom: 25px;
-    }
+h1 { margin-bottom: 5px; }
 
-    .card {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
+.subtitle {
+  color: #666;
+  margin-top: 0;
+}
 
-    .song-number {
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
+.round-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 4px 0 20px;
+}
 
-    .fields {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+.card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
 
-    label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 5px;
-      color: #555;
-    }
+.song-number {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #bbb;
-      border-radius: 8px;
-    }
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
 
-    #teamName {
-      margin-top: 5px;
-    }
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #555;
+}
 
-    button {
-      width: 100%;
-      padding: 15px;
-      margin-top: 12px;
-      border: 0;
-      border-radius: 9px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #222;
-      color: white;
-    }
+input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+}
 
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #222;
+  color: white;
+}
 
-    #status {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-    }
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
 
-    .success {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 25px;
-      text-align: center;
-      margin-top: 20px;
-    }
+#status {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
 
-    @media (max-width: 520px) {
-      .fields {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+.success {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <main>
 
-  <h1>Le Blind Test</h1>
-  <p class="subtitle" id="roundTitle">Manche 1 sur 3</p>
+<h1>Le Blind Test</h1>
 
-  <div id="quiz">
+<p class="subtitle" id="roundNumber">
+  Manche 1 sur 3
+</p>
 
-    <div class="card">
-      <label for="teamName">Nom de l'équipe</label>
-      <input
-        id="teamName"
-        type="text"
-        placeholder="Ex. Les Divas"
-        autocomplete="off"
-      >
-    </div>
+<div class="round-name" id="roundName">
+  Manche 1
+</div>
 
-    <p class="subtitle" id="instructions">
-      Pour chaque chanson, indiquez le titre et le ou les artistes.
-    </p>
+<div id="quiz">
 
-    <div id="songs"></div>
+  <div class="card">
+    <label for="teamName">
+      Nom de l'équipe
+    </label>
 
-    <button id="submitButton">
-      Envoyer la manche
-    </button>
-
-    <div id="status"></div>
-
+    <input
+      id="teamName"
+      type="text"
+      placeholder="Ex. Les Divas"
+      autocomplete="off"
+    >
   </div>
 
-  <div id="success" class="success" hidden>
-    <h2>Manche envoyée ✓</h2>
-    <p>Vos réponses sont enregistrées et verrouillées.</p>
-    <p>Attendez les résultats !</p>
-  </div>
+  <p class="subtitle" id="instructions">
+    Pour chaque chanson, indiquez le titre et le ou les artistes.
+  </p>
+
+  <div id="songs"></div>
+
+  <button id="submitButton">
+    Envoyer la manche
+  </button>
+
+  <div id="status"></div>
+
+</div>
+
+<div id="success" class="success" hidden>
+  <h2>Manche envoyée ✓</h2>
+  <p>Vos réponses sont enregistrées et verrouillées.</p>
+  <p>Attendez les résultats !</p>
+</div>
 
 </main>
 
 
 <script type="module">
 
-  import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
-  import {
-    getAuth,
-    signInAnonymously
-  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {
+  getAuth,
+  signInAnonymously
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
-  import {
-    getDatabase,
-    ref,
-    set
-  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-
-
-  // -----------------------------
-  // FIREBASE
-  // -----------------------------
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
-    authDomain: "le-blind-test.firebaseapp.com",
-    databaseURL: "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "le-blind-test",
-    storageBucket: "le-blind-test.firebasestorage.app",
-    messagingSenderId: "551170415765",
-    appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const database = getDatabase(app);
+import {
+  getDatabase,
+  ref,
+  push,
+  set
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
 
-  // -----------------------------
-  // MANCHE
-  // -----------------------------
+const firebaseConfig = {
+  apiKey: "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
+  authDomain: "le-blind-test.firebaseapp.com",
+  databaseURL: "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "le-blind-test",
+  storageBucket: "le-blind-test.firebasestorage.app",
+  messagingSenderId: "551170415765",
+  appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
+};
 
-  // Pour notre premier test :
-  const currentRound = 1;
-
-  const secondField =
-    currentRound === 3
-      ? "Comédie musicale"
-      : "Artiste(s)";
-
-
-  // -----------------------------
-  // INTERFACE
-  // -----------------------------
-
-  const songsContainer =
-    document.getElementById("songs");
-
-  const submitButton =
-    document.getElementById("submitButton");
-
-  const status =
-    document.getElementById("status");
-
-  const teamName =
-    document.getElementById("teamName");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
 
 
-  document.getElementById("roundTitle").textContent =
-    `Manche ${currentRound} sur 3`;
+/* =========================
+   CONFIGURATION TEMPORAIRE
+   =========================
 
-  if (currentRound === 3) {
-    document.getElementById("instructions").textContent =
-      "Pour chaque chanson, indiquez le titre et la comédie musicale dont elle est tirée.";
-  }
+   Plus tard l'admin pilotera ceci
+   automatiquement.
+*/
+
+const currentRound = 1;
+const temporaryRoundName = "Manche test";
 
 
-  // Crée les 10 chansons
-  for (let i = 1; i <= 10; i++) {
+/* =========================
+   INTERFACE
+   ========================= */
 
-    const card = document.createElement("div");
-    card.className = "card";
+const songsContainer =
+  document.getElementById("songs");
 
-    card.innerHTML = `
-      <div class="song-number">
-        Chanson ${i}
+const submitButton =
+  document.getElementById("submitButton");
+
+const status =
+  document.getElementById("status");
+
+const teamNameInput =
+  document.getElementById("teamName");
+
+const secondField =
+  currentRound === 3
+    ? "Comédie musicale"
+    : "Artiste(s)";
+
+
+document.getElementById("roundNumber").textContent =
+  `Manche ${currentRound} sur 3`;
+
+document.getElementById("roundName").textContent =
+  temporaryRoundName;
+
+
+if (currentRound === 3) {
+
+  document.getElementById("instructions").textContent =
+    "Pour chaque chanson, indiquez le titre et la comédie musicale dont elle est tirée.";
+}
+
+
+/* =========================
+   10 CHANSONS
+   ========================= */
+
+for (let i = 1; i <= 10; i++) {
+
+  const card =
+    document.createElement("div");
+
+  card.className = "card";
+
+  card.innerHTML = `
+
+    <div class="song-number">
+      Chanson ${i}
+    </div>
+
+    <div class="fields">
+
+      <div>
+
+        <label for="title-${i}">
+          Titre
+        </label>
+
+        <input
+          id="title-${i}"
+          type="text"
+          autocomplete="off"
+          placeholder="Titre de la chanson"
+        >
+
       </div>
 
-      <div class="fields">
+      <div>
 
-        <div>
-          <label for="title-${i}">
-            Titre
-          </label>
+        <label for="second-${i}">
+          ${secondField}
+        </label>
 
-          <input
-            id="title-${i}"
-            type="text"
-            autocomplete="off"
-            placeholder="Titre de la chanson"
-          >
-        </div>
-
-        <div>
-          <label for="second-${i}">
-            ${secondField}
-          </label>
-
-          <input
-            id="second-${i}"
-            type="text"
-            autocomplete="off"
-            placeholder="${secondField}"
-          >
-        </div>
+        <input
+          id="second-${i}"
+          type="text"
+          autocomplete="off"
+          placeholder="${secondField}"
+        >
 
       </div>
-    `;
 
-    songsContainer.appendChild(card);
-  }
+    </div>
+  `;
 
-
-  // -----------------------------
-  // AUTHENTIFICATION
-  // -----------------------------
-
-  let user = null;
-
-  try {
-
-    const result =
-      await signInAnonymously(auth);
-
-    user = result.user;
-
-  } catch (error) {
-
-    console.error(error);
-
-    status.textContent =
-      "Impossible de se connecter au jeu.";
-
-    submitButton.disabled = true;
-  }
+  songsContainer.appendChild(card);
+}
 
 
-  // -----------------------------
-  // ENVOI DES RÉPONSES
-  // -----------------------------
+/* =========================
+   AUTHENTIFICATION
+   ========================= */
 
-  submitButton.addEventListener("click", async () => {
+let user = null;
 
-    const name = teamName.value.trim();
+try {
+
+  const result =
+    await signInAnonymously(auth);
+
+  user = result.user;
+
+}
+catch (error) {
+
+  console.error(error);
+
+  status.textContent =
+    "Impossible de se connecter au jeu.";
+
+  submitButton.disabled = true;
+}
+
+
+/* =========================
+   IDENTITÉ DE L'ÉQUIPE
+   ========================= */
+
+/*
+   teamId est conservé dans le navigateur.
+
+   Firebase Auth identifie le téléphone.
+   teamId identifie l'équipe dans le jeu.
+*/
+
+let teamId =
+  localStorage.getItem("blindTestTeamId");
+
+let storedTeamName =
+  localStorage.getItem("blindTestTeamName");
+
+
+if (storedTeamName) {
+
+  teamNameInput.value =
+    storedTeamName;
+}
+
+
+/* =========================
+   ENVOI
+   ========================= */
+
+submitButton.addEventListener(
+  "click",
+  async () => {
+
+    const name =
+      teamNameInput.value.trim();
+
 
     if (!name) {
+
       status.textContent =
         "Indiquez le nom de votre équipe.";
-      teamName.focus();
+
+      teamNameInput.focus();
+
       return;
     }
 
+
     if (!user) {
+
       status.textContent =
         "Connexion au jeu impossible.";
+
       return;
     }
+
+
+    /*
+       Première manche sur cet appareil :
+       création d'un identifiant d'équipe.
+    */
+
+    if (!teamId) {
+
+      const newTeamRef =
+        push(ref(database, "teams"));
+
+      teamId =
+        newTeamRef.key;
+
+      localStorage.setItem(
+        "blindTestTeamId",
+        teamId
+      );
+    }
+
+
+    localStorage.setItem(
+      "blindTestTeamName",
+      name
+    );
 
 
     const answers = {};
+
 
     for (let i = 1; i <= 10; i++) {
 
@@ -334,23 +426,49 @@
             .getElementById(`second-${i}`)
             .value
             .trim()
+
       };
     }
 
 
     submitButton.disabled = true;
-    status.textContent = "Envoi en cours…";
+
+    status.textContent =
+      "Envoi en cours…";
 
 
     try {
 
+      /*
+        L'équipe possède une identité unique
+        indépendante de son UID Firebase.
+      */
+
       await set(
         ref(
           database,
-          `rounds/${currentRound}/submissions/${user.uid}`
+          `teams/${teamId}`
         ),
         {
           teamName: name,
+          ownerUid: user.uid
+        }
+      );
+
+
+      /*
+        Sa réponse à cette manche est stockée
+        séparément.
+      */
+
+      await set(
+        ref(
+          database,
+          `rounds/${currentRound}/submissions/${teamId}`
+        ),
+        {
+          teamName: name,
+          ownerUid: user.uid,
           answers: answers,
           submittedAt: Date.now()
         }
@@ -361,12 +479,14 @@
         .getElementById("quiz")
         .hidden = true;
 
+
       document
         .getElementById("success")
         .hidden = false;
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
       console.error(error);
 
@@ -376,7 +496,8 @@
       submitButton.disabled = false;
     }
 
-  });
+  }
+);
 
 </script>
 
