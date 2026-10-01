@@ -2221,44 +2221,13 @@ document
     async () => {
 
       const confirmation =
-        prompt(
-          "Cette action supprimera toutes les équipes, réponses, corrections et scores.\n\nPour confirmer, écrivez exactement : RÉINITIALISER"
-        );
+  confirm(
+    "Êtes-vous sûr de vouloir réinitialiser la partie ? Toutes les équipes, réponses, corrections et scores seront supprimés."
+  );
 
-
-      if (
-        confirmation
-        !== "RÉINITIALISER"
-      ) {
-
-        if (
-          confirmation !== null
-        ) {
-
-          alert(
-            "Réinitialisation annulée : le texte saisi ne correspond pas."
-          );
-
-        }
-
-        return;
-
-      }
-
-
-      const secondConfirmation =
-        confirm(
-          "Dernière confirmation : supprimer définitivement toutes les données de la partie ?"
-        );
-
-
-      if (
-        !secondConfirmation
-      ) {
-
-        return;
-
-      }
+if (!confirmation) {
+  return;
+}
 
 
       const button =
