@@ -86,7 +86,9 @@ label {
   margin-bottom: 12px;
 }
 
-.full { width: 100%; }
+.full {
+  width: 100%;
+}
 
 .topline {
   display: flex;
@@ -262,6 +264,11 @@ label {
   font-weight: bold;
 }
 
+.reset-card {
+  margin-top: 35px;
+  border: 2px solid #222;
+}
+
 @media (max-width: 700px) {
 
   .song-row,
@@ -295,40 +302,79 @@ label {
 
 <main>
 
+<!-- =========================
+     CONNEXION
+     ========================= -->
+
 <section id="login">
 
   <div class="card">
 
     <h1>Administration</h1>
-    <p class="subtitle">Le Blind Test</p>
 
-    <label>E-mail</label>
-    <input id="email" type="email" autocomplete="username">
+    <p class="subtitle">
+      Le Blind Test
+    </p>
 
-    <label>Mot de passe</label>
-    <input id="password" type="password" autocomplete="current-password">
+    <label for="email">
+      E-mail
+    </label>
 
-    <button id="loginButton" class="primary full">
+    <input
+      id="email"
+      type="email"
+      autocomplete="username"
+    >
+
+    <label for="password">
+      Mot de passe
+    </label>
+
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+    >
+
+    <button
+      id="loginButton"
+      class="primary full"
+    >
       Se connecter
     </button>
 
-    <div id="loginStatus" class="status"></div>
+    <div
+      id="loginStatus"
+      class="status"
+    ></div>
 
   </div>
 
 </section>
 
 
+<!-- =========================
+     ADMIN
+     ========================= -->
+
 <section id="admin" hidden>
 
   <div class="topline">
 
     <div>
+
       <h1>Le Blind Test</h1>
-      <p class="subtitle">Administration</p>
+
+      <p class="subtitle">
+        Administration
+      </p>
+
     </div>
 
-    <button id="logoutButton" class="secondary">
+    <button
+      id="logoutButton"
+      class="secondary"
+    >
       Déconnexion
     </button>
 
@@ -337,18 +383,26 @@ label {
 
   <div class="tabs">
 
-    <button id="prepareTab" class="tab active">
+    <button
+      id="prepareTab"
+      class="tab active"
+    >
       Préparer la soirée
     </button>
 
-    <button id="correctTab" class="tab">
+    <button
+      id="correctTab"
+      class="tab"
+    >
       Correction & classements
     </button>
 
   </div>
 
 
-  <!-- PREPARATION -->
+  <!-- =========================
+       PREPARATION
+       ========================= -->
 
   <section id="prepareSection">
 
@@ -363,31 +417,103 @@ label {
           </label>
 
           <select id="currentRound">
-            <option value="1">Manche 1</option>
-            <option value="2">Manche 2</option>
-            <option value="3">Manche 3</option>
+
+            <option value="1">
+              Manche 1
+            </option>
+
+            <option value="2">
+              Manche 2
+            </option>
+
+            <option value="3">
+              Manche 3
+            </option>
+
           </select>
 
         </div>
 
-        <button id="saveButton" class="primary">
+
+        <button
+          id="saveButton"
+          class="primary"
+        >
           Enregistrer
         </button>
 
       </div>
 
-      <div id="saveStatus" class="status"></div>
+      <div
+        id="saveStatus"
+        class="status"
+      ></div>
 
     </div>
 
+
     <div id="rounds"></div>
+
+
+    <!-- ENREGISTRER EN BAS -->
+
+    <div class="card">
+
+      <button
+        id="saveButtonBottom"
+        class="primary full"
+      >
+        Enregistrer
+      </button>
+
+      <div
+        id="saveStatusBottom"
+        class="status"
+      ></div>
+
+    </div>
+
+
+    <!-- REINITIALISATION -->
+
+    <div class="card reset-card">
+
+      <h2>
+        Nouvelle partie
+      </h2>
+
+      <p>
+        Supprime toutes les équipes, leurs réponses,
+        les corrections et les scores.
+      </p>
+
+      <p>
+        <strong>
+          Les manches et les réponses de référence
+          seront conservées.
+        </strong>
+      </p>
+
+      <button
+        id="resetGameButton"
+        class="secondary"
+      >
+        Réinitialiser la partie
+      </button>
+
+    </div>
 
   </section>
 
 
-  <!-- CORRECTION -->
+  <!-- =========================
+       CORRECTION
+       ========================= -->
 
-  <section id="correctSection" hidden>
+  <section
+    id="correctSection"
+    hidden
+  >
 
     <div class="card correction-controls">
 
@@ -398,18 +524,32 @@ label {
         </label>
 
         <select id="correctionRound">
-          <option value="1">Manche 1</option>
-          <option value="2">Manche 2</option>
-          <option value="3">Manche 3</option>
+
+          <option value="1">
+            Manche 1
+          </option>
+
+          <option value="2">
+            Manche 2
+          </option>
+
+          <option value="3">
+            Manche 3
+          </option>
+
         </select>
 
       </div>
+
 
       <div>
 
         <label>&nbsp;</label>
 
-        <button id="refreshButton" class="secondary full">
+        <button
+          id="refreshButton"
+          class="secondary full"
+        >
           Actualiser les réponses
         </button>
 
@@ -426,25 +566,46 @@ label {
           Correction
         </h2>
 
-        <div id="referenceAnswer" class="reference"></div>
+        <div
+          id="referenceAnswer"
+          class="reference"
+        ></div>
 
-        <button id="validateAllButton" class="secondary">
+
+        <button
+          id="validateAllButton"
+          class="secondary"
+        >
           Tout valider
         </button>
 
-        <div id="teamAnswers" style="margin-top:18px;"></div>
+
+        <div
+          id="teamAnswers"
+          style="margin-top:18px;"
+        ></div>
+
 
         <div class="navigation">
 
-          <button id="previousSong" class="secondary">
+          <button
+            id="previousSong"
+            class="secondary"
+          >
             ← Précédente
           </button>
 
-          <div id="navigationStatus" class="navigation-status">
+          <div
+            id="navigationStatus"
+            class="navigation-status"
+          >
             Chanson 1 / 10
           </div>
 
-          <button id="nextSong" class="secondary">
+          <button
+            id="nextSong"
+            class="secondary"
+          >
             Suivante →
           </button>
 
@@ -454,6 +615,8 @@ label {
 
     </div>
 
+
+    <!-- CLASSEMENTS -->
 
     <div class="rankings">
 
@@ -470,7 +633,9 @@ label {
 
       <div class="card">
 
-        <h2>Classement général</h2>
+        <h2>
+          Classement général
+        </h2>
 
         <div id="globalRanking"></div>
 
@@ -487,6 +652,10 @@ label {
 
 <script type="module">
 
+/* =========================
+   FIREBASE
+   ========================= */
+
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
@@ -502,31 +671,54 @@ import {
   getDatabase,
   ref,
   get,
-  set
+  set,
+  remove
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
-  authDomain: "le-blind-test.firebaseapp.com",
-  databaseURL: "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "le-blind-test",
-  storageBucket: "le-blind-test.firebasestorage.app",
-  messagingSenderId: "551170415765",
-  appId: "1:551170415765:web:3cc00ae2c266d36e628f9c"
+
+  apiKey:
+    "AIzaSyDypIWezmJvZbbuq7Yv054YxNb529wfboQ",
+
+  authDomain:
+    "le-blind-test.firebaseapp.com",
+
+  databaseURL:
+    "https://le-blind-test-default-rtdb.europe-west1.firebasedatabase.app",
+
+  projectId:
+    "le-blind-test",
+
+  storageBucket:
+    "le-blind-test.firebasestorage.app",
+
+  messagingSenderId:
+    "551170415765",
+
+  appId:
+    "1:551170415765:web:3cc00ae2c266d36e628f9c"
+
 };
+
 
 const ADMIN_UID =
   "fMWxlPehvGQs0ggcZDTwAbe2eDp2";
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const database =
+  getDatabase(app);
 
 
 /* =========================
-   VARIABLES
+   DONNEES
    ========================= */
 
 let settings = null;
@@ -551,25 +743,56 @@ let correctionSong = 1;
    DOM
    ========================= */
 
-const loginSection = document.getElementById("login");
-const adminSection = document.getElementById("admin");
+const loginSection =
+  document.getElementById("login");
 
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginButton = document.getElementById("loginButton");
-const logoutButton = document.getElementById("logoutButton");
-const loginStatus = document.getElementById("loginStatus");
+const adminSection =
+  document.getElementById("admin");
 
-const prepareTab = document.getElementById("prepareTab");
-const correctTab = document.getElementById("correctTab");
+const emailInput =
+  document.getElementById("email");
 
-const prepareSection = document.getElementById("prepareSection");
-const correctSection = document.getElementById("correctSection");
+const passwordInput =
+  document.getElementById("password");
 
-const roundsContainer = document.getElementById("rounds");
-const currentRoundSelect = document.getElementById("currentRound");
-const saveButton = document.getElementById("saveButton");
-const saveStatus = document.getElementById("saveStatus");
+const loginButton =
+  document.getElementById("loginButton");
+
+const logoutButton =
+  document.getElementById("logoutButton");
+
+const loginStatus =
+  document.getElementById("loginStatus");
+
+const prepareTab =
+  document.getElementById("prepareTab");
+
+const correctTab =
+  document.getElementById("correctTab");
+
+const prepareSection =
+  document.getElementById("prepareSection");
+
+const correctSection =
+  document.getElementById("correctSection");
+
+const roundsContainer =
+  document.getElementById("rounds");
+
+const currentRoundSelect =
+  document.getElementById("currentRound");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const saveStatus =
+  document.getElementById("saveStatus");
+
+const saveButtonBottom =
+  document.getElementById("saveButtonBottom");
+
+const saveStatusBottom =
+  document.getElementById("saveStatusBottom");
 
 const correctionRoundSelect =
   document.getElementById("correctionRound");
@@ -591,24 +814,33 @@ const globalRanking =
 
 
 /* =========================
-   PREPARATION UI
+   CREATION DES MANCHES
    ========================= */
 
 function createRounds() {
 
   roundsContainer.innerHTML = "";
 
-  for (let round = 1; round <= 3; round++) {
+
+  for (
+    let round = 1;
+    round <= 3;
+    round++
+  ) {
 
     const secondField =
       round === 3
         ? "Comédie musicale"
         : "Artiste(s)";
 
+
     const section =
       document.createElement("section");
 
-    section.className = "round";
+
+    section.className =
+      "round";
+
 
     section.innerHTML = `
 
@@ -616,7 +848,9 @@ function createRounds() {
 
         <div class="round-title">
 
-          <h2>Manche ${round}</h2>
+          <h2>
+            Manche ${round}
+          </h2>
 
           <div>
 
@@ -639,17 +873,31 @@ function createRounds() {
       </div>
     `;
 
-    roundsContainer.appendChild(section);
+
+    roundsContainer.appendChild(
+      section
+    );
+
 
     const songs =
-      document.getElementById(`songs-${round}`);
+      document.getElementById(
+        `songs-${round}`
+      );
 
-    for (let song = 1; song <= 10; song++) {
+
+    for (
+      let song = 1;
+      song <= 10;
+      song++
+    ) {
 
       const row =
         document.createElement("div");
 
-      row.className = "song-row";
+
+      row.className =
+        "song-row";
+
 
       row.innerHTML = `
 
@@ -659,7 +907,9 @@ function createRounds() {
 
         <div>
 
-          <label>Titre</label>
+          <label>
+            Titre
+          </label>
 
           <input
             id="title-${round}-${song}"
@@ -670,7 +920,9 @@ function createRounds() {
 
         <div>
 
-          <label>${secondField}</label>
+          <label>
+            ${secondField}
+          </label>
 
           <input
             id="second-${round}-${song}"
@@ -680,54 +932,73 @@ function createRounds() {
         </div>
       `;
 
-      songs.appendChild(row);
+
+      songs.appendChild(
+        row
+      );
+
     }
+
   }
+
 }
+
 
 createRounds();
 
 
 /* =========================
-   LOGIN
+   CONNEXION
    ========================= */
 
-loginButton.addEventListener("click", async () => {
-
-  loginStatus.textContent = "Connexion…";
-
-  try {
-
-    const result =
-      await signInWithEmailAndPassword(
-        auth,
-        emailInput.value.trim(),
-        passwordInput.value
-      );
-
-    if (result.user.uid !== ADMIN_UID) {
-
-      await signOut(auth);
-
-      loginStatus.textContent =
-        "Ce compte n'est pas autorisé.";
-
-      return;
-    }
-
-    loginStatus.textContent = "";
-
-  }
-
-  catch (error) {
-
-    console.error(error);
+loginButton.addEventListener(
+  "click",
+  async () => {
 
     loginStatus.textContent =
-      "Connexion impossible.";
-  }
+      "Connexion…";
 
-});
+
+    try {
+
+      const result =
+        await signInWithEmailAndPassword(
+          auth,
+          emailInput.value.trim(),
+          passwordInput.value
+        );
+
+
+      if (
+        result.user.uid
+        !== ADMIN_UID
+      ) {
+
+        await signOut(auth);
+
+        loginStatus.textContent =
+          "Ce compte n'est pas autorisé.";
+
+        return;
+
+      }
+
+
+      loginStatus.textContent = "";
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      loginStatus.textContent =
+        "Connexion impossible.";
+
+    }
+
+  }
+);
 
 
 logoutButton.addEventListener(
@@ -736,62 +1007,93 @@ logoutButton.addEventListener(
 );
 
 
-onAuthStateChanged(auth, async user => {
+/* =========================
+   ETAT DE CONNEXION
+   ========================= */
 
-  if (user && user.uid === ADMIN_UID) {
+onAuthStateChanged(
+  auth,
+  async user => {
 
-    loginSection.hidden = true;
-    adminSection.hidden = false;
+    if (
+      user
+      &&
+      user.uid === ADMIN_UID
+    ) {
 
-    await loadSettings();
+      loginSection.hidden = true;
+      adminSection.hidden = false;
+
+      await loadSettings();
+
+    }
+
+    else {
+
+      loginSection.hidden = false;
+      adminSection.hidden = true;
+
+    }
 
   }
-
-  else {
-
-    loginSection.hidden = false;
-    adminSection.hidden = true;
-
-  }
-
-});
+);
 
 
 /* =========================
    ONGLETS
    ========================= */
 
-prepareTab.addEventListener("click", () => {
+prepareTab.addEventListener(
+  "click",
+  () => {
 
-  prepareTab.classList.add("active");
-  correctTab.classList.remove("active");
+    prepareTab
+      .classList
+      .add("active");
 
-  prepareSection.hidden = false;
-  correctSection.hidden = true;
+    correctTab
+      .classList
+      .remove("active");
 
-});
+    prepareSection.hidden = false;
+    correctSection.hidden = true;
+
+  }
+);
 
 
-correctTab.addEventListener("click", async () => {
+correctTab.addEventListener(
+  "click",
+  async () => {
 
-  correctTab.classList.add("active");
-  prepareTab.classList.remove("active");
+    correctTab
+      .classList
+      .add("active");
 
-  correctSection.hidden = false;
-  prepareSection.hidden = true;
+    prepareTab
+      .classList
+      .remove("active");
 
-  correctionRound =
-    Number(correctionRoundSelect.value);
+    correctSection.hidden = false;
+    prepareSection.hidden = true;
 
-  correctionSong = 1;
 
-  await loadAllGameData();
+    correctionRound =
+      Number(
+        correctionRoundSelect.value
+      );
 
-});
+    correctionSong = 1;
+
+
+    await loadAllGameData();
+
+  }
+);
 
 
 /* =========================
-   SETTINGS
+   CHARGER CONFIGURATION
    ========================= */
 
 async function loadSettings() {
@@ -799,50 +1101,86 @@ async function loadSettings() {
   try {
 
     const snapshot =
-      await get(ref(database, "settings"));
+      await get(
+        ref(
+          database,
+          "settings"
+        )
+      );
 
-    if (!snapshot.exists()) return;
 
-    settings = snapshot.val();
+    if (!snapshot.exists()) {
+      return;
+    }
+
+
+    settings =
+      snapshot.val();
+
 
     currentRoundSelect.value =
       settings.currentRound || 1;
+
 
     correctionRoundSelect.value =
       settings.currentRound || 1;
 
 
-    for (let round = 1; round <= 3; round++) {
+    for (
+      let round = 1;
+      round <= 3;
+      round++
+    ) {
 
       const roundData =
         settings.rounds?.[round];
 
-      if (!roundData) continue;
+
+      if (!roundData) {
+        continue;
+      }
+
 
       document
-        .getElementById(`round-name-${round}`)
+        .getElementById(
+          `round-name-${round}`
+        )
         .value =
           roundData.name || "";
 
 
-      for (let song = 1; song <= 10; song++) {
+      for (
+        let song = 1;
+        song <= 10;
+        song++
+      ) {
 
         const answer =
           roundData.answers?.[song];
 
-        if (!answer) continue;
+
+        if (!answer) {
+          continue;
+        }
+
 
         document
-          .getElementById(`title-${round}-${song}`)
+          .getElementById(
+            `title-${round}-${song}`
+          )
           .value =
             answer.title || "";
 
+
         document
-          .getElementById(`second-${round}-${song}`)
+          .getElementById(
+            `second-${round}-${song}`
+          )
           .value =
             answer.second || "";
 
       }
+
     }
 
   }
@@ -856,65 +1194,108 @@ async function loadSettings() {
 }
 
 
-saveButton.addEventListener("click", async () => {
+/* =========================
+   ENREGISTRER CONFIGURATION
+   ========================= */
+
+async function saveSettings() {
 
   saveButton.disabled = true;
-  saveStatus.textContent = "Enregistrement…";
+  saveButtonBottom.disabled = true;
+
+
+  saveStatus.textContent =
+    "Enregistrement…";
+
+  saveStatusBottom.textContent =
+    "Enregistrement…";
+
 
   const data = {
+
     currentRound:
-      Number(currentRoundSelect.value),
+      Number(
+        currentRoundSelect.value
+      ),
+
     rounds: {}
+
   };
 
 
-  for (let round = 1; round <= 3; round++) {
+  for (
+    let round = 1;
+    round <= 3;
+    round++
+  ) {
 
     const answers = {};
 
-    for (let song = 1; song <= 10; song++) {
+
+    for (
+      let song = 1;
+      song <= 10;
+      song++
+    ) {
 
       answers[song] = {
 
         title:
           document
-            .getElementById(`title-${round}-${song}`)
+            .getElementById(
+              `title-${round}-${song}`
+            )
             .value
             .trim(),
 
         second:
           document
-            .getElementById(`second-${round}-${song}`)
+            .getElementById(
+              `second-${round}-${song}`
+            )
             .value
             .trim()
 
       };
+
     }
+
 
     data.rounds[round] = {
 
       name:
         document
-          .getElementById(`round-name-${round}`)
+          .getElementById(
+            `round-name-${round}`
+          )
           .value
           .trim(),
 
       answers
 
     };
+
   }
 
 
   try {
 
     await set(
-      ref(database, "settings"),
+      ref(
+        database,
+        "settings"
+      ),
       data
     );
 
+
     settings = data;
 
+
     saveStatus.textContent =
+      "Soirée enregistrée ✓";
+
+    saveStatusBottom.textContent =
       "Soirée enregistrée ✓";
 
   }
@@ -923,25 +1304,48 @@ saveButton.addEventListener("click", async () => {
 
     console.error(error);
 
+
     saveStatus.textContent =
+      "L'enregistrement a échoué.";
+
+    saveStatusBottom.textContent =
       "L'enregistrement a échoué.";
 
   }
 
-  saveButton.disabled = false;
 
-});
+  saveButton.disabled = false;
+  saveButtonBottom.disabled = false;
+
+}
+
+
+saveButton.addEventListener(
+  "click",
+  saveSettings
+);
+
+
+saveButtonBottom.addEventListener(
+  "click",
+  saveSettings
+);
 
 
 /* =========================
-   CHARGEMENT JEU
+   CHARGER DONNEES DU JEU
    ========================= */
 
 async function loadAllGameData() {
 
   await loadSettings();
 
-  for (let round = 1; round <= 3; round++) {
+
+  for (
+    let round = 1;
+    round <= 3;
+    round++
+  ) {
 
     const submissionsSnapshot =
       await get(
@@ -950,6 +1354,7 @@ async function loadAllGameData() {
           `rounds/${round}/submissions`
         )
       );
+
 
     submissions[round] =
       submissionsSnapshot.exists()
@@ -965,12 +1370,14 @@ async function loadAllGameData() {
         )
       );
 
+
     corrections[round] =
       correctionsSnapshot.exists()
         ? correctionsSnapshot.val()
         : {};
 
   }
+
 
   renderCorrection();
   renderRankings();
@@ -985,11 +1392,17 @@ async function loadAllGameData() {
 function renderCorrection() {
 
   const roundData =
-    settings?.rounds?.[correctionRound];
+    settings
+      ?.rounds
+      ?.[correctionRound];
+
 
   const expected =
-    roundData?.answers?.[correctionSong]
+    roundData
+      ?.answers
+      ?.[correctionSong]
     || {};
+
 
   const secondLabel =
     correctionRound === 3
@@ -997,10 +1410,12 @@ function renderCorrection() {
       : "Artiste(s)";
 
 
-  document.getElementById(
-    "correctionTitle"
-  ).textContent =
-    `Manche ${correctionRound} — ${roundData?.name || ""}`;
+  document
+    .getElementById(
+      "correctionTitle"
+    )
+    .textContent =
+      `Manche ${correctionRound} — ${roundData?.name || ""}`;
 
 
   referenceAnswer.innerHTML = `
@@ -1011,12 +1426,16 @@ function renderCorrection() {
 
     <div>
       Titre :
-      <b>${escapeHTML(expected.title || "—")}</b>
+      <b>
+        ${escapeHTML(expected.title || "—")}
+      </b>
     </div>
 
     <div>
       ${secondLabel} :
-      <b>${escapeHTML(expected.second || "—")}</b>
+      <b>
+        ${escapeHTML(expected.second || "—")}
+      </b>
     </div>
   `;
 
@@ -1025,16 +1444,20 @@ function renderCorrection() {
     `Chanson ${correctionSong} / 10`;
 
 
-  document.getElementById(
-    "previousSong"
-  ).disabled =
-    correctionSong === 1;
+  document
+    .getElementById(
+      "previousSong"
+    )
+    .disabled =
+      correctionSong === 1;
 
 
-  document.getElementById(
-    "nextSong"
-  ).disabled =
-    correctionSong === 10;
+  document
+    .getElementById(
+      "nextSong"
+    )
+    .disabled =
+      correctionSong === 10;
 
 
   teamAnswers.innerHTML = "";
@@ -1042,155 +1465,187 @@ function renderCorrection() {
 
   const teams =
     Object.entries(
-      submissions[correctionRound] || {}
+      submissions[correctionRound]
+      || {}
     );
 
 
   if (teams.length === 0) {
 
-    teamAnswers.innerHTML =
-      `<p class="empty">
+    teamAnswers.innerHTML = `
+
+      <p class="empty">
         Aucune équipe n'a encore envoyé cette manche.
-      </p>`;
+      </p>
+    `;
 
     return;
+
   }
 
 
   teams
     .sort(
       (a, b) =>
-        a[1].teamName.localeCompare(
-          b[1].teamName,
-          "fr"
-        )
+        a[1]
+          .teamName
+          .localeCompare(
+            b[1].teamName,
+            "fr"
+          )
     )
-    .forEach(([teamId, submission]) => {
+    .forEach(
+      ([teamId, submission]) => {
 
-      const answer =
-        submission.answers?.[correctionSong]
-        || {};
+        const answer =
+          submission
+            .answers
+            ?.[correctionSong]
+          || {};
 
-      const correction =
-        corrections[correctionRound]
-          ?.[teamId]
-          ?.[correctionSong]
-        || {};
 
-      const titleAccepted =
-        correction.title === true;
+        const correction =
+          corrections[correctionRound]
+            ?.[teamId]
+            ?.[correctionSong]
+          || {};
 
-      const secondAccepted =
-        correction.second === true;
 
-      const score =
-        calculateSongScore(
-          titleAccepted,
-          secondAccepted
+        const titleAccepted =
+          correction.title === true;
+
+
+        const secondAccepted =
+          correction.second === true;
+
+
+        const score =
+          calculateSongScore(
+            titleAccepted,
+            secondAccepted
+          );
+
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "team-answer";
+
+
+        card.innerHTML = `
+
+          <div class="team-header">
+
+            <strong>
+              ${escapeHTML(submission.teamName)}
+            </strong>
+
+            <strong>
+              ${score}/5
+            </strong>
+
+          </div>
+
+
+          <div class="answer-buttons">
+
+            <button
+              class="answer-button
+              ${titleAccepted ? "accepted" : ""}"
+              data-team="${teamId}"
+              data-field="title"
+            >
+
+              <span class="answer-label">
+                Titre
+              </span>
+
+              <span class="answer-text">
+
+                ${titleAccepted ? "✓ " : ""}
+
+                ${escapeHTML(
+                  answer.title || "—"
+                )}
+
+              </span>
+
+            </button>
+
+
+            <button
+              class="answer-button
+              ${secondAccepted ? "accepted" : ""}"
+              data-team="${teamId}"
+              data-field="second"
+            >
+
+              <span class="answer-label">
+                ${secondLabel}
+              </span>
+
+              <span class="answer-text">
+
+                ${secondAccepted ? "✓ " : ""}
+
+                ${escapeHTML(
+                  answer.second || "—"
+                )}
+
+              </span>
+
+            </button>
+
+          </div>
+        `;
+
+
+        teamAnswers.appendChild(
+          card
         );
 
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "team-answer";
-
-
-      card.innerHTML = `
-
-        <div class="team-header">
-
-          <strong>
-            ${escapeHTML(submission.teamName)}
-          </strong>
-
-          <strong>
-            ${score}/5
-          </strong>
-
-        </div>
-
-
-        <div class="answer-buttons">
-
-          <button
-            class="answer-button
-            ${titleAccepted ? "accepted" : ""}"
-            data-team="${teamId}"
-            data-field="title"
-          >
-
-            <span class="answer-label">
-              Titre
-            </span>
-
-            <span class="answer-text">
-              ${titleAccepted ? "✓ " : ""}
-              ${escapeHTML(answer.title || "—")}
-            </span>
-
-          </button>
-
-
-          <button
-            class="answer-button
-            ${secondAccepted ? "accepted" : ""}"
-            data-team="${teamId}"
-            data-field="second"
-          >
-
-            <span class="answer-label">
-              ${secondLabel}
-            </span>
-
-            <span class="answer-text">
-              ${secondAccepted ? "✓ " : ""}
-              ${escapeHTML(answer.second || "—")}
-            </span>
-
-          </button>
-
-        </div>
-      `;
-
-
-      teamAnswers.appendChild(card);
-
-    });
+      }
+    );
 
 
   document
     .querySelectorAll(
       ".answer-button"
     )
-    .forEach(button => {
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        async () => {
+        button.addEventListener(
+          "click",
+          async () => {
 
-          const teamId =
-            button.dataset.team;
+            const teamId =
+              button.dataset.team;
 
-          const field =
-            button.dataset.field;
+            const field =
+              button.dataset.field;
 
-          await toggleCorrection(
-            teamId,
-            field
-          );
 
-        }
-      );
+            await toggleCorrection(
+              teamId,
+              field
+            );
 
-    });
+          }
+        );
+
+      }
+    );
 
 }
 
 
 /* =========================
-   TOGGLE CORRECTION
+   MODIFIER UNE CORRECTION
    ========================= */
 
 async function toggleCorrection(
@@ -1204,12 +1659,17 @@ async function toggleCorrection(
       ?.[correctionSong]
     || {};
 
+
   const updated = {
+
     title:
       existing.title === true,
+
     second:
       existing.second === true
+
   };
+
 
   updated[field] =
     !updated[field];
@@ -1224,12 +1684,20 @@ async function toggleCorrection(
   );
 
 
-  if (!corrections[correctionRound][teamId]) {
-    corrections[correctionRound][teamId] = {};
+  if (
+    !corrections[correctionRound][teamId]
+  ) {
+
+    corrections[correctionRound][teamId] =
+      {};
+
   }
 
-  corrections[correctionRound][teamId][correctionSong] =
-    updated;
+
+  corrections[correctionRound]
+    [teamId]
+    [correctionSong] =
+      updated;
 
 
   renderCorrection();
@@ -1243,7 +1711,9 @@ async function toggleCorrection(
    ========================= */
 
 document
-  .getElementById("validateAllButton")
+  .getElementById(
+    "validateAllButton"
+  )
   .addEventListener(
     "click",
     async () => {
@@ -1255,12 +1725,15 @@ document
         );
 
 
-      for (const teamId of teams) {
+      for (
+        const teamId of teams
+      ) {
 
         const updated = {
           title: true,
           second: true
         };
+
 
         await set(
           ref(
@@ -1271,14 +1744,24 @@ document
         );
 
 
-        if (!corrections[correctionRound][teamId]) {
-          corrections[correctionRound][teamId] = {};
+        if (
+          !corrections[correctionRound]
+            [teamId]
+        ) {
+
+          corrections[correctionRound]
+            [teamId] = {};
+
         }
 
-        corrections[correctionRound][teamId][correctionSong] =
-          updated;
+
+        corrections[correctionRound]
+          [teamId]
+          [correctionSong] =
+            updated;
 
       }
+
 
       renderCorrection();
       renderRankings();
@@ -1288,16 +1771,20 @@ document
 
 
 /* =========================
-   NAVIGATION
+   NAVIGATION CORRECTION
    ========================= */
 
 document
-  .getElementById("previousSong")
+  .getElementById(
+    "previousSong"
+  )
   .addEventListener(
     "click",
     () => {
 
-      if (correctionSong > 1) {
+      if (
+        correctionSong > 1
+      ) {
 
         correctionSong--;
 
@@ -1310,12 +1797,16 @@ document
 
 
 document
-  .getElementById("nextSong")
+  .getElementById(
+    "nextSong"
+  )
   .addEventListener(
     "click",
     () => {
 
-      if (correctionSong < 10) {
+      if (
+        correctionSong < 10
+      ) {
 
         correctionSong++;
 
@@ -1339,6 +1830,7 @@ correctionRoundSelect
 
       correctionSong = 1;
 
+
       await loadAllGameData();
 
     }
@@ -1346,7 +1838,9 @@ correctionRoundSelect
 
 
 document
-  .getElementById("refreshButton")
+  .getElementById(
+    "refreshButton"
+  )
   .addEventListener(
     "click",
     loadAllGameData
@@ -1354,7 +1848,7 @@ document
 
 
 /* =========================
-   SCORES
+   CALCUL DES SCORES
    ========================= */
 
 function calculateSongScore(
@@ -1364,12 +1858,27 @@ function calculateSongScore(
 
   let score = 0;
 
-  if (title) score += 2;
-  if (second) score += 2;
 
-  if (title && second) {
-    score += 1;
+  if (title) {
+    score += 2;
   }
+
+
+  if (second) {
+    score += 2;
+  }
+
+
+  if (
+    title
+    &&
+    second
+  ) {
+
+    score += 1;
+
+  }
+
 
   return score;
 
@@ -1383,13 +1892,19 @@ function calculateRoundScore(
 
   let total = 0;
 
-  for (let song = 1; song <= 10; song++) {
+
+  for (
+    let song = 1;
+    song <= 10;
+    song++
+  ) {
 
     const correction =
       corrections[round]
         ?.[teamId]
         ?.[song]
       || {};
+
 
     total +=
       calculateSongScore(
@@ -1398,6 +1913,7 @@ function calculateRoundScore(
       );
 
   }
+
 
   return total;
 
@@ -1423,20 +1939,23 @@ function renderRoundRanking() {
       submissions[correctionRound]
       || {}
     )
-    .map(([teamId, data]) => ({
+    .map(
+      ([teamId, data]) => ({
 
-      teamId,
+        teamId,
 
-      name:
-        data.teamName || "Équipe",
+        name:
+          data.teamName
+          || "Équipe",
 
-      score:
-        calculateRoundScore(
-          correctionRound,
-          teamId
-        )
+        score:
+          calculateRoundScore(
+            correctionRound,
+            teamId
+          )
 
-    }))
+      })
+    )
     .sort(
       (a, b) =>
         b.score - a.score
@@ -1478,25 +1997,38 @@ function renderGlobalRanking() {
   const teamMap = {};
 
 
-  for (let round = 1; round <= 3; round++) {
+  for (
+    let round = 1;
+    round <= 3;
+    round++
+  ) {
 
     for (
       const [teamId, data]
       of Object.entries(
-        submissions[round] || {}
+        submissions[round]
+        || {}
       )
     ) {
 
-      if (!teamMap[teamId]) {
+      if (
+        !teamMap[teamId]
+      ) {
 
         teamMap[teamId] = {
+
           teamId,
+
           name:
-            data.teamName || "Équipe",
+            data.teamName
+            || "Équipe",
+
           score: 0
+
         };
 
       }
+
 
       teamMap[teamId].name =
         data.teamName
@@ -1515,29 +2047,32 @@ function renderGlobalRanking() {
 
 
   const teams =
-    Object.values(teamMap)
-      .sort(
-        (a, b) =>
-          b.score - a.score
-          ||
-          a.name.localeCompare(
-            b.name,
-            "fr"
-          )
-      );
+    Object.values(
+      teamMap
+    )
+    .sort(
+      (a, b) =>
+        b.score - a.score
+        ||
+        a.name.localeCompare(
+          b.name,
+          "fr"
+        )
+    );
 
 
-  const completedRounds =
+  const currentRound =
     Math.max(
       1,
       Number(
-        settings?.currentRound || 1
+        settings?.currentRound
+        || 1
       )
     );
 
 
   const maxScore =
-    completedRounds * 50;
+    currentRound * 50;
 
 
   renderRankingList(
@@ -1562,12 +2097,16 @@ function renderRankingList(
   container.innerHTML = "";
 
 
-  if (teams.length === 0) {
+  if (
+    teams.length === 0
+  ) {
 
-    container.innerHTML =
-      `<p class="empty">
+    container.innerHTML = `
+
+      <p class="empty">
         Aucun score pour le moment.
-      </p>`;
+      </p>
+    `;
 
     return;
 
@@ -1583,19 +2122,22 @@ function renderRankingList(
 
       let rank;
 
+
       if (
         previousScore !== null
         &&
         team.score === previousScore
       ) {
 
-        rank = previousRank;
+        rank =
+          previousRank;
 
       }
 
       else {
 
-        rank = index + 1;
+        rank =
+          index + 1;
 
       }
 
@@ -1612,20 +2154,29 @@ function renderRankingList(
 
 
       if (rank === 1) {
+
         rankDisplay = "🥇";
+
       }
 
       else if (rank === 2) {
+
         rankDisplay = "🥈";
+
       }
 
       else if (rank === 3) {
+
         rankDisplay = "🥉";
+
       }
 
 
       const row =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className =
         "ranking-row";
@@ -1647,12 +2198,174 @@ function renderRankingList(
       `;
 
 
-      container.appendChild(row);
+      container.appendChild(
+        row
+      );
 
     }
   );
 
 }
+
+
+/* =========================
+   REINITIALISER LA PARTIE
+   ========================= */
+
+document
+  .getElementById(
+    "resetGameButton"
+  )
+  .addEventListener(
+    "click",
+    async () => {
+
+      const confirmation =
+        prompt(
+          "Cette action supprimera toutes les équipes, réponses, corrections et scores.\n\nPour confirmer, écrivez exactement : RÉINITIALISER"
+        );
+
+
+      if (
+        confirmation
+        !== "RÉINITIALISER"
+      ) {
+
+        if (
+          confirmation !== null
+        ) {
+
+          alert(
+            "Réinitialisation annulée : le texte saisi ne correspond pas."
+          );
+
+        }
+
+        return;
+
+      }
+
+
+      const secondConfirmation =
+        confirm(
+          "Dernière confirmation : supprimer définitivement toutes les données de la partie ?"
+        );
+
+
+      if (
+        !secondConfirmation
+      ) {
+
+        return;
+
+      }
+
+
+      const button =
+        document.getElementById(
+          "resetGameButton"
+        );
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "Réinitialisation…";
+
+
+      try {
+
+        /*
+          Supprimer les équipes.
+        */
+
+        await remove(
+          ref(
+            database,
+            "teams"
+          )
+        );
+
+
+        /*
+          Supprimer réponses et corrections
+          des trois manches.
+        */
+
+        for (
+          let round = 1;
+          round <= 3;
+          round++
+        ) {
+
+          await remove(
+            ref(
+              database,
+              `rounds/${round}/submissions`
+            )
+          );
+
+
+          await remove(
+            ref(
+              database,
+              `rounds/${round}/corrections`
+            )
+          );
+
+        }
+
+
+        /*
+          Réinitialiser les données locales
+          de l'interface admin.
+        */
+
+        submissions = {
+          1: {},
+          2: {},
+          3: {}
+        };
+
+
+        corrections = {
+          1: {},
+          2: {},
+          3: {}
+        };
+
+
+        alert(
+          "Partie réinitialisée ✓\n\nToutes les équipes, réponses, corrections et scores ont été supprimés."
+        );
+
+
+        button.textContent =
+          "Réinitialiser la partie";
+
+        button.disabled = false;
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        alert(
+          "La réinitialisation a échoué."
+        );
+
+
+        button.textContent =
+          "Réinitialiser la partie";
+
+        button.disabled = false;
+
+      }
+
+    }
+  );
 
 
 /* =========================
@@ -1662,11 +2375,31 @@ function renderRankingList(
 function escapeHTML(value) {
 
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
